@@ -1,0 +1,47 @@
+
+<div class="viewport-lock">
+  <div class="glass-card">
+    <!-- Left visual panel -->
+    <div class="side-panel branding">
+      <div class="branding-overlay">
+        <h1>Welcome</h1>
+        <p>Your centralized portal for account management and feedback.</p>
+      </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="side-panel form-content">
+      <div class="content-wrapper">
+        <div class="header-area">
+          <h2>Login</h2>
+          <!-- Remove titlecase pipe if it throws template error; keep as-is if you have it imported -->
+          <span class="role-tag" *ngIf="role">{{ role }}</span>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onLogin()" class="login-form" novalidate>
+          <div class="field">
+            <label>User Name</label>
+            <input type="text" formControlName="username" placeholder="Enter username" />
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input type="password" formControlName="password" placeholder="••••••••" />
+          </div>
+
+          <button type="submit" class="login-btn" [disabled]="form.invalid">Sign In</button>
+        </form>
+
+        <div class="action-footer">
+          <ng-container *ngIf="role !== 'admin'">
+            <button class="text-link" (click)="onForgotPassword()">Forgot Password?</button>
+            <div class="line"></div>
+            <button class="text-link" (click)="goToRegister()">Register</button>
+          </ng-container>
+          <p class="admin-text" *ngIf="role === 'admin'">Recovery handled by IT.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
