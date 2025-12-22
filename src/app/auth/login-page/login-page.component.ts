@@ -37,21 +37,26 @@ export class LoginPageComponent implements OnInit {
     return this.form.controls;
   }
 
-  onLogin() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    const { username, password } = this.form.value;
-    console.log('Logging in:', { username, password, role: this.role });
-    this.router.navigate(['/home-page']);
-  }
-
   onForgotPassword() {
     alert('Forgot password clicked.');
   }
 
-  goToRegister() {
-    this.router.navigate(['/register-page']);
+
+// src/app/auth/login-page/login-page.component.ts
+onLogin() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
   }
+  const { username, password } = this.form.value;
+  console.log('Logging in:', { username, password, role: this.role });
+
+  // Navigate to the feature route
+  this.router.navigate(['/auth/home-page']);
+}
+
+goToRegister() {
+  // Navigate to the feature route
+  this.router.navigate(['/auth/register-page']);
+}
 }
