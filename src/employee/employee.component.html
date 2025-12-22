@@ -1,1 +1,88 @@
-<p>employee works!</p>
+<div class="container mt-4">
+ 
+  <!-- Page Title -->
+  <div class="row mb-4">
+    <div class="col">
+      <h2 class="fw-bold">Employee Dashboard</h2>
+      <p class="text-muted">Welcome! Manage your feedback and recognitions</p>
+    </div>
+  </div>
+ 
+  <!-- Quick Action Cards -->
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 text-center"
+           routerLink="/feedback/submit">
+        <div class="card-body">
+          <h5 class="card-title">Submit Feedback</h5>
+          <p class="card-text text-muted">
+            Share feedback with peers or managers
+          </p>
+          <button class="btn btn-primary btn-sm">Open</button>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 text-center"
+           routerLink="/recognition/give">
+        <div class="card-body">
+          <h5 class="card-title">Give Recognition</h5>
+          <p class="card-text text-muted">
+            Appreciate your teammates
+          </p>
+          <button class="btn btn-success btn-sm">Open</button>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 text-center"
+           routerLink="/recognition/history">
+        <div class="card-body">
+          <h5 class="card-title">My Recognitions</h5>
+          <p class="card-text text-muted">
+            View appreciation received
+          </p>
+          <button class="btn btn-info btn-sm">View</button>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 text-center"
+           routerLink="/notifications">
+        <div class="card-body">
+          <h5 class="card-title">Notifications</h5>
+          <p class="card-text text-muted">
+            View latest updates
+          </p>
+          <button class="btn btn-warning btn-sm">Check</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Summary Section -->
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted">Feedback Given</h6>
+          <h3 class="fw-bold">{{ feedbackGiven }}</h3>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="col-md-6">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted">Recognition Points</h6>
+          <h3 class="fw-bold text-success">{{ recognitionPoints }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+ 
