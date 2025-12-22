@@ -1,0 +1,64 @@
+<header class="topbar d-flex align-items-center px-3">
+  <button class="hamburger" (click)="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </button>
+
+  <h1 class="topbar-title mb-0 ms-2 text-uppercase">Employee Dashboard</h1>
+
+  <div class="ms-auto position-relative">
+    <img src="profile.png" alt="Profile" width="35" height="35" class="rounded-circle border border-white shadow-sm"
+      style="cursor: pointer;" (click)="$event.stopPropagation(); toggleProfile()">
+
+    @if (isProfileOpen()) {
+
+    <div class="profile-dropdown-menu shadow-lg position-absolute end-0 mt-2 border-0 overflow-hidden">
+
+
+      <div class="d-flex justify-content-center align-items-center m-0">
+        <div class="text-black fw-bold fs-5">Tejas Thorat</div>
+      </div>
+
+      <hr class="my-1 text-muted opacity-25">
+
+      <div class="d-flex justify-content-center align-items-center m-0">
+        <div class="text-black"> EMP ID : 246371</div>
+      </div>
+
+      <!-- <hr class="my-1 text-muted opacity-25"> -->
+
+      <div class="p-2 border-top">
+        <button class="dropdown-item text-danger text-center w-100" (click)="onLogout()">
+          <i class="bi bi-box-arrow-right me-2"></i> Log Out
+        </button>
+      </div>
+
+
+      <div class="bg-white p-2 align-items-center">
+
+
+
+
+
+      </div>
+
+
+    </div>
+    }
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" [class.open]="isSidebarOpen()">
+    <nav class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action" routerLink="/admin" routerLinkActive="active">FEEDBACK</a>
+      <a class="list-group-item list-group-item-action" routerLink="/admin/users" routerLinkActive="active">ANONOMOUS
+        FEEDBACK</a>
+      <a class="list-group-item list-group-item-action" routerLink="/admin" routerLinkActive="active">HELLO</a>
+      <a class="list-group-item list-group-item-action" routerLink="/admin/users" routerLinkActive="active">PROFILE</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

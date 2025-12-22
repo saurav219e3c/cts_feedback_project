@@ -1,0 +1,150 @@
+ 
+/* Layout containers */
+.layout {
+  display: flex;
+  min-height: calc(100vh - 56px); /* minus topbar height */
+  background: #ffffff; /* subtle app background */
+}
+ 
+/* Topbar */
+.topbar {
+  height: 56px;
+  padding: 0 12px;
+  border-bottom: 1px solid #ffffff;
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1001; /* above sidebar */
+}
+.topbar-title {
+  color: black;
+  font-size: 1rem;
+  margin: 0 0 0 8px;
+}
+ 
+/* Hamburger button (three lines) */
+.hamburger {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #111827; /* dark lines */
+  border-radius: 2px;
+}
+ 
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: rgb(230, 236, 231);
+  border-right: 1px solid #e5e7eb;
+  position: fixed;
+  top: 56px; /* below topbar */
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%); /* hidden by default on mobile */
+  transition: transform 200ms ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+ 
+/* Show when toggled */
+.sidebar.open {
+  transform: translateX(0);
+ 
+}
+ 
+/* Main content */
+.content {
+  flex: 1;
+  padding: 16px;
+  margin-left: 0; /* mobile default */
+}
+ 
+/* Backdrop for mobile */
+.backdrop {
+  position: fixed;
+  inset: 56px 0 0 0; /* below topbar */
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 999; /* below sidebar */
+}
+ 
+/* Desktop behavior: sidebar always visible */
+@media (min-width: 1400px) { /* Bootstrap lg breakpoint */
+  .sidebar {
+    position: sticky;
+    top: 56px;
+    transform: none !important; /* always shown */
+  }
+  .content {
+    margin-left: 260px; /* reserve space for sidebar */
+  }
+  .backdrop {
+    display: none !important;
+  }
+}
+ 
+ /* Position the profile container so the absolute dropdown works */
+.position-relative {
+  position: relative;
+}
+
+/* Fix for the dropdown card position */
+.dropdown-menu {
+
+  border-radius: 10px;
+  box-shadow: 0 6px 20px
+ 
+}
+
+.topbar {
+  background: #e5e7eb;
+  color: white;
+  height: 60px;
+  z-index: 1001;
+}
+
+/* Sidebar transition */
+.sidebar {
+  transition: all 0.3s ease;
+  
+}
+
+/* Custom Dropdown Styling */
+.profile-dropdown-menu {
+  z-index: 1050;
+  min-width: 220px;
+  border-radius: 12px;
+  animation: fadeInDown 0.2s ease-out; /* Smooth entrance */
+}
+
+.dropdown-item {
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Smooth Animation */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure topbar is above sidebar */
