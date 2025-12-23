@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './employee-dashboard.component.css'
 })
 export class EmployeeDashboardComponent {
+  feedbackGiven=12;
+  feedbackReceived=8;
+  recognitionPoints=150;
+  notifications=3;
+
 
 }

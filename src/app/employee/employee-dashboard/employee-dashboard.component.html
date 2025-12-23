@@ -1,1 +1,59 @@
-<p>employee-dashboard works!</p>
+<!-- PAGE TITLE -->
+<div class="mb-4">
+  <h2 class="fw-bold">Employee Dashboard</h2>
+  <p class="text-muted">Welcome back! Here’s your activity summary.</p>
+</div>
+ 
+<!-- KPI CARDS -->
+<div class="row g-3 mb-4">
+ 
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card">
+      <div class="card-body">
+        <h6 class="text-muted">Feedback Given</h6>
+        <h3 class="fw-bold">{{ feedbackGiven }}</h3>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card">
+      <div class="card-body">
+        <h6 class="text-muted">Feedback Received</h6>
+        <h3 class="fw-bold">{{ feedbackReceived }}</h3>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card">
+      <div class="card-body">
+        <h6 class="text-muted">Recognition Points</h6>
+        <h3 class="fw-bold">{{ recognitionPoints }}</h3>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card">
+      <div class="card-body">
+        <h6 class="text-muted">Notifications</h6>
+        <h3 class="fw-bold">{{ notifications }}</h3>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+ 
+<!-- RECENT ACTIVITY -->
+<div class="card shadow-sm">
+  <div class="card-header fw-bold">
+    Recent Activity
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item" *ngFor="let activity of recentActivities">
+      {{ activity }}
+    </li>
+  </ul>
+</div>
+ 

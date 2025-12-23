@@ -21,78 +21,7 @@
     flex: 1;
     padding: 20px;
 }
-/* Hamburger button */
-.hamburger {
-  background: transparent;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
-  padding: 6px;
-  cursor: pointer;
-}
- 
-/* Hamburger lines */
-.hamburger span {
-  width: 24px;
-  height: 3px;
-  background-color: #ffffff; /* white lines */
-  margin: 3px 0;
-  display: block;
-  transition: all 0.3s ease;
-}
- 
-/* Animation when active (X icon) */
-.hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
- 
-.hamburger.active span:nth-child(2) {
-  opacity: 0;
-}
- 
-.hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}/* Hamburger button */
-.hamburger {
-  background: transparent;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
-  padding: 6px;
-  cursor: pointer;
-}
- 
-/* Hamburger lines */
-.hamburger span {
-  width: 24px;
-  height: 3px;
-  background-color: #ffffff; /* white lines */
-  margin: 3px 0;
-  display: block;
-  transition: all 0.3s ease;
-}
- 
-/* Animation when active (X icon) */
-.hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
- 
-.hamburger.active span:nth-child(2) {
-  opacity: 0;
-}
- 
-.hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
- 
+
 
  
 /* Sidebar menu links */
