@@ -1,0 +1,90 @@
+<!-- TOP NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+
+    <button class="hamburger btn me-3" (click)="toggleSidebar()" [class.active]="isSidebarOpen" aria-label="Toggle sidebar">
+        <!-- <i class="bi" [ngClass]="isSidebarOpen ? 'bi-list' : 'bi-x-lg'"></i> -->
+    </button>
+    <a class="navbar-brand fw-bold" href="#">Feedback DashBoard</a>
+
+    <div class="ms-auto d-flex align-items-center">
+        <span class="text-white me-3">
+            👤 Tejas (EMP001)
+        </span>
+
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Account
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" routerLink="/employee/profile">
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+                <li>
+                    <a class="dropdown-item text-danger" href="#">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid p-0">
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div class=" sidebar bg-light" [class.sidebar-closed]="!isSidebarOpen">
+            <ul class="nav flex-column sidebar-menu">
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/employee/dashboard">
+                        🏠 Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/employee/submit-feedback">
+                        ✍ Submit Feedback
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/employee/received-feedback">
+                        📩 Received Feedback
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/employee/give-recognition">
+                        ⭐ Give Recognition
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/employee/received-recognition">
+                        🏆 Received Recognition
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/employee/notifications">
+                        🔔 Notifications
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="content" [class.content-expanded]="!isSidebarOpen">
+            <router-outlet></router-outlet>
+        </div>
+
+    </div>
+</div>
