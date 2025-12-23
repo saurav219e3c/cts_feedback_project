@@ -1,1 +1,37 @@
-<p>user-management works!</p>
+
+<!-- Full-bleed background layer -->
+<div class="user-bg"></div>
+
+<!-- Foreground content on top of the background -->
+<div class="user-container">
+  <h3 class="mb-4 user-title">User Management</h3>
+
+  <div class="row g-4">
+    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let user of users">
+      <div class="user-card text-center p-4">
+        <div class="avatar mb-3">
+          {{ user.name.charAt(0) }}
+        </div>
+
+        <h5 class="mb-0">{{ user.name }}</h5>
+        <small>ID: {{ user.id }}</small>
+
+        <span class="badge bg-secondary d-block my-2">
+          {{ user.role }}
+        </span>
+
+        <div class="d-flex justify-content-around mt-3">
+          <div>
+            <strong>{{ user.feedback }}</strong>
+            <div class="text-muted small">Feedback</div>
+          </div>
+          <div>
+            <strong>{{ user.recognition }}</strong>
+            <div class="text-muted small">Recognition</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+``

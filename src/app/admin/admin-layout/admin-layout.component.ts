@@ -1,7 +1,13 @@
 
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  Router,
+  NavigationEnd,
+  RouterOutlet,
+  RouterLink,
+  RouterLinkActive
+} from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -15,20 +21,16 @@ export class AdminLayoutComponent {
   isSidebarOpen = false;
 
   constructor(private router: Router) {
-    // Close sidebar on each route change for mobile
+    // Close sidebar on each route change (mobile-like UX on all screens)
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe(() => {
-        if (!this.isDesktop()) {
-          this.isSidebarOpen = false;
-        }
+        this.isSidebarOpen = false;
       });
   }
 
   toggleSidebar(): void {
-    if (!this.isDesktop()) {
-      this.isSidebarOpen = !this.isSidebarOpen;
-    }
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 
   closeSidebar(): void {
@@ -37,13 +39,6 @@ export class AdminLayoutComponent {
 
   @HostListener('document:keydown.escape')
   onEsc(): void {
-    if (!this.isDesktop()) {
-      this.isSidebarOpen = false;
-    }
-  }
-
-  private isDesktop(): boolean {
-    // Match the CSS breakpoint used in media query
-    return window.matchMedia('(min-width: 1400px)').matches;
+    this.isSidebarOpen = false;
   }
 }
