@@ -1,3 +1,10 @@
 import { Routes } from '@angular/router';
-
-export const routes: Routes = [];
+import { managerRoutes } from './manager/manager.routes';
+export const routes: Routes = [
+     {
+        path:'manager',children:managerRoutes
+    },
+    {
+        path:'',redirectTo:'manager',pathMatch:'full'
+    }
+];

@@ -1,0 +1,65 @@
+
+<!-- Top bar with hamburger -->
+<header class="topbar d-flex align-items-center">
+  <button
+    class="hamburger"
+    aria-label="Toggle navigation"
+    [attr.aria-expanded]="isSidebarOpen"
+    (click)="toggleSidebar()"
+  >
+    <span></span><span></span><span></span>
+  </button>
+
+  <h1 class="topbar-title">Manager Dashboard</h1>
+</header>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="isSidebarOpen" role="navigation" aria-label="Sidebar">
+    <nav class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action"
+         routerLink="/manager"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }">
+        Dashboard
+      </a>
+
+      <a class="list-group-item list-group-item-action"
+         routerLink="/manager/notifications"
+         routerLinkActive="active">
+        Notifications
+      </a>
+
+      <a class="list-group-item list-group-item-action"
+         routerLink="/admin/profile"
+         routerLinkActive="active">
+        Profile
+      </a>
+
+      <a class="list-group-item list-group-item-action"
+         routerLink="/admin/reports"
+         routerLinkActive="active">
+        Reports
+      </a>
+
+      <a class="list-group-item list-group-item-action"
+         routerLink="/admin/settings"
+         routerLinkActive="active">
+        Settings
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main content area -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<!-- Backdrop for mobile when sidebar is open -->
+<div
+  class="backdrop"
+  *ngIf="isSidebarOpen"
+  (click)="closeSidebar()"
+  aria-hidden="true"
+></div>
