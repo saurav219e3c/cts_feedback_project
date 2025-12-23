@@ -5,7 +5,7 @@ import { EmployeeLayoutComponent } from '../employee/employee-layout/employee-la
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, EmployeeLayoutComponent],
+  imports: [RouterOutlet, EmployeeLayoutComponent,EmployeeComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
