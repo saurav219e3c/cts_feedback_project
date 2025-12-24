@@ -4,10 +4,39 @@
 
 <!-- Foreground content on top of the background -->
 <div class="user-container">
-  <h3 class="mb-4 user-title">User Management</h3>
+  <!-- Header: Title + Search -->
+  <div class="user-header d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <h3 class="mb-0 user-title">User Management</h3>
 
+    <!-- Search bar -->
+    <div class="user-search">
+      <label for="userSearch" class="visually-hidden">Search users</label>
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input
+          id="userSearch"
+          type="text"
+          class="search-input"
+          placeholder="Search by name, ID or role..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        />
+        <button
+          type="button"
+          class="search-clear"
+          *ngIf="searchTerm"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
   <div class="row g-4">
-    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let user of users">
+    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let user of filteredUsers">
       <div class="user-card text-center p-4">
         <div class="avatar mb-3">
           {{ user.name.charAt(0) }}
@@ -32,6 +61,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Optional: Empty state when no results -->
+    <div class="col-12" *ngIf="!filteredUsers.length">
+      <div class="empty-state">
+        <div class="empty-icon">🕵️</div>
+        <p class="mb-1">No users match “{{ searchTerm }}”.</p>
+        <small class="text-muted">Try a different keyword (e.g., name, numeric ID, or role).</small>
+      </div>
+    </div>
   </div>
 </div>
-``
+
