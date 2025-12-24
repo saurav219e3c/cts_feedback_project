@@ -1,59 +1,91 @@
-<!-- PAGE TITLE -->
 <div class="mb-4">
   <h2 class="fw-bold">Employee Dashboard</h2>
   <p class="text-muted">Welcome back! Here’s your activity summary.</p>
 </div>
- 
-<!-- KPI CARDS -->
-<div class="row g-3 mb-4">
- 
+
+<h5 class="fw-bold mb-3">Quick Actions</h5>
+<div class="row g-3 mb-5">
   <div class="col-md-3">
-    <div class="card shadow-sm dashboard-card">
+    <div class="card h-100 action-card text-center border-0 shadow-sm p-3">
       <div class="card-body">
-        <h6 class="text-muted">Feedback Given</h6>
-        <h3 class="fw-bold">{{ feedbackGiven }}</h3>
+        <div class="icon-circle bg-primary-light mb-3 mx-auto">
+          <i class="bi bi-pencil-square text-primary fs-3"></i>
+        </div>
+        <h6 class="fw-bold">Submit Feedback</h6>
+        <button class="btn btn-primary btn-sm w-100 mt-2" routerLink="/employee/feedback" routerLinkActive="active">Submit</button>
       </div>
     </div>
   </div>
- 
+
   <div class="col-md-3">
-    <div class="card shadow-sm dashboard-card">
+    <div class="card h-100 action-card text-center border-0 shadow-sm p-3">
       <div class="card-body">
-        <h6 class="text-muted">Feedback Received</h6>
-        <h3 class="fw-bold">{{ feedbackReceived }}</h3>
+        <div class="icon-circle bg-success-light mb-3 mx-auto">
+          <i class="bi bi-star-fill text-success fs-3"></i>
+        </div>
+        <h6 class="fw-bold">Give Recognition</h6>
+        <button class="btn btn-success btn-sm w-100 mt-2">Recognize</button>
       </div>
     </div>
   </div>
- 
+
   <div class="col-md-3">
-    <div class="card shadow-sm dashboard-card">
+    <div class="card h-100 action-card text-center border-0 shadow-sm p-3">
       <div class="card-body">
-        <h6 class="text-muted">Recognition Points</h6>
-        <h3 class="fw-bold">{{ recognitionPoints }}</h3>
+        <div class="icon-circle bg-warning-light mb-3 mx-auto">
+          <i class="bi bi-clock-history text-warning fs-3"></i>
+        </div>
+        <h6 class="fw-bold">History</h6>
+        <button class="btn btn-warning btn-sm w-100 mt-2">View History</button>
       </div>
     </div>
   </div>
- 
+
   <div class="col-md-3">
-    <div class="card shadow-sm dashboard-card">
+    <div class="card h-100 action-card text-center border-0 shadow-sm p-3">
       <div class="card-body">
-        <h6 class="text-muted">Notifications</h6>
-        <h3 class="fw-bold">{{ notifications }}</h3>
+        <div class="icon-circle bg-info-light mb-3 mx-auto">
+          <i class="bi bi-rss-fill text-info fs-3"></i>
+        </div>
+        <h6 class="fw-bold">Feeds</h6>
+        <button class="btn btn-info btn-sm w-100 mt-2">Open Feeds</button>
       </div>
     </div>
   </div>
- 
 </div>
- 
-<!-- RECENT ACTIVITY -->
-<div class="card shadow-sm">
-  <div class="card-header fw-bold">
-    Recent Activity
+
+<h5 class="fw-bold mb-3">Activity Summary</h5>
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card border-0">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Feedback Given</h6>
+        <h3 class="fw-bold m-0">{{ feedbackGiven }}</h3>
+      </div>
+    </div>
   </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item" *ngFor="let activity of recentActivities">
-      {{ activity }}
-    </li>
-  </ul>
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card border-0">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Feedback Received</h6>
+        <h3 class="fw-bold m-0">{{ feedbackReceived }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card border-0">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Recognition Points</h6>
+        <h3 class="fw-bold m-0">{{ recognitionPoints }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm dashboard-card border-0">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Notifications</h6>
+        <h3 class="fw-bold m-0">{{ notifications }}</h3>
+      </div>
+    </div>
+  </div>
 </div>
- 
