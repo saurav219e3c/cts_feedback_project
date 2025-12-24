@@ -29,7 +29,8 @@
             "styles": [
 
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css"
             ],
             "scripts": []
           },

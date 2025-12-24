@@ -10,13 +10,14 @@
     <span></span><span></span><span></span>
   </button>
 
-  <h1 class="topbar-title">Manager Dashboard</h1>
+  <h1 class="topbar-title">Manager Portal </h1>
 </header>
 
 <div class="layout">
   <!-- Sidebar -->
   <aside class="sidebar" [class.open]="isSidebarOpen" role="navigation" aria-label="Sidebar">
     <nav class="list-group list-group-flush">
+
       <a class="list-group-item list-group-item-action"
          routerLink="/manager"
          routerLinkActive="active"
@@ -31,22 +32,27 @@
       </a>
 
       <a class="list-group-item list-group-item-action"
-         routerLink="/admin/profile"
+         routerLink="/manager/profile"
          routerLinkActive="active">
         Profile
       </a>
 
       <a class="list-group-item list-group-item-action"
-         routerLink="/admin/reports"
+         routerLink="/manager/feedback"
          routerLinkActive="active">
         Reports
       </a>
 
-      <a class="list-group-item list-group-item-action"
-         routerLink="/admin/settings"
-         routerLinkActive="active">
-        Settings
-      </a>
+      
+<a
+  class="btn btn-danger fw-bold text-white w-40 rounded shadow-sm d-flex align-items-center gap-2 ml-12 mt-4"
+  routerLink="/manager/analytics"
+  routerLinkActive="active"
+>
+  
+      <span class="ml-8.5">Logout</span>
+</a>
+
     </nav>
   </aside>
 
