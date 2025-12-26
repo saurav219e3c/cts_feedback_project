@@ -25,7 +25,11 @@ export const managerRoutes :Routes = [{
         },
         {
             path:'profile',
-            component:ManagerProfileComponent
+            component:ManagerProfileComponent,
+            
+
+            
+
         },
         {
             path:'notifications',

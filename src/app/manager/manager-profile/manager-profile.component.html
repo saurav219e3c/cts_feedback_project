@@ -1,0 +1,46 @@
+<div class="max-h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg">
+
+    <!-- Profile Image -->
+    <div class="flex justify-center mb-4">
+      <div
+        class="w-32 h-32 rounded-full border-4 border-blue-500 object-cover bg-green-700 flex items-center justify-center text-white text-4xl font-bold">
+        {{ getInitials(manager.name) }}</div>
+    </div>
+
+    <!-- Name -->
+    <h2 class="text-center text-2xl font-semibold text-gray-800">
+      {{ manager.name }}
+    </h2>
+
+    <!-- Role -->
+    <p class="text-center text-sm text-gray-500 mb-6">
+      Manager
+    </p>
+
+    <!-- Details -->
+    <div class="space-y-3">
+      <div class="flex justify-between text-gray-700">
+        <span class="font-medium">Manager ID:</span>
+        <span>{{ manager.id }}</span>
+      </div>
+
+      <div class="flex justify-between text-gray-700">
+        <span class="font-medium">Email:</span>
+        <span class="text-blue-600">{{ manager.email }}</span>
+      </div>
+      <div class="flex justify-between text-gray-700">
+        <span class="font-medium">Email</span>
+        <span class="text-blue-600">{{ manager.email }}</span>
+      </div>
+      <div class="flex justify-between items-center ml-23">
+        <a class="btn btn-danger fw-bold text-white w-40 rounded shadow-sm d-flex align-items-center gap-2 ml-12 mt-4"
+          routerLink="/manager" routerLinkActive="active">
+
+          <span class="ml-8.5">Logout</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
