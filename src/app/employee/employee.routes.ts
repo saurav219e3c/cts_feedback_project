@@ -16,6 +16,7 @@ export const EMPLOYEE_ROUTES: Routes = [
       { path: 'feedback', component: SubmitFeedbackComponent},
       { path: 'notification', component: EmployeeNotificationComponent },
       { path: 'recognition', component: EmployeeRecognitionComponent },
+      {path: 'recivedfeedback',component:EmployeeFeedbackComponent}
      
     ]
   }

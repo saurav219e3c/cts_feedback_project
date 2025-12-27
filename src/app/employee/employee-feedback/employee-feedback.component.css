@@ -1,0 +1,9 @@
+.feedback-card{
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+}
+
+.feedback-card:hover{
+    transform: translateY(-3px);
+
+}
