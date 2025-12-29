@@ -1,0 +1,66 @@
+.recognition-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #f1f3f5;
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  overflow: visible; /* To allow points circle to pop out */
+}
+
+.recognition-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+}
+
+/* Points Floating Circle */
+.points-circle {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  line-height: 1;
+  border: 4px solid #fff;
+}
+
+.points-circle .score { font-size: 1.4rem; }
+.points-circle small { font-size: 0.6rem; text-transform: uppercase; }
+
+/* Styling elements */
+.badge-tag {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+  background: rgba(0,0,0,0.03);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.quote-text {
+  font-size: 1.1rem;
+  color: #4a4a4a;
+  line-height: 1.6;
+  font-style: italic;
+  min-height: 80px;
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.x-small { font-size: 0.75rem; }

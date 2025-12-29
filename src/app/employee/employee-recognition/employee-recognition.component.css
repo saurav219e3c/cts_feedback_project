@@ -1,20 +1,35 @@
-.card {
-  transition: transform 0.3s ease;
+.extra-small { font-size: 0.7rem; }
+.x-small { font-size: 0.8rem; }
+
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Subtle focus effect on inputs */
-.form-control:focus, .form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+.avatar-xs {
+  width: 32px;
+  height: 32px;
+  background: #0d6efd;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
 }
 
-/* Make the primary button pop */
-.btn-primary {
-  background: linear-gradient(45deg, #0d6efd, #0043a8);
-  border: none;
+.form-range::-webkit-slider-thumb {
+  background: #0d6efd;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(45deg, #0043a8, #0d6efd);
-  transform: translateY(-2px);
-}
+.cursor-pointer { cursor: pointer; }
+
+/* Dynamic Badge Colors */
+.border-leader { border-color: #dc3545 !important; color: #dc3545; }
+.border-team { border-color: #198754 !important; color: #198754; }
+.border-problem { border-color: #0dcaf0 !important; color: #0dcaf0; }

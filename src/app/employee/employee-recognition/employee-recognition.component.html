@@ -1,78 +1,91 @@
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
-      <div class="card shadow-sm border-0 border-top border-primary border-4 rounded-4">
-        <div class=" border-blue text-black text-center py-4 rounded-top-4">
-          <i class="bi bi-stars text-primary display-4 fs-1 mb-2"></i>
-          <h3 class="fw-bold mb-0 mt-2">Send Recognition</h3>
-          <p class="small opacity-75">Celebrate your teammate's hard work!</p>
+      <div class="card shadow-lg border-0 border-top border-primary border-4 rounded-4 position-relative">
+        
+        <div class="text-center py-4 rounded-top-4 bg-white">
+          <div class="icon-circle bg-primary-subtle mx-auto mb-2">
+            <i class="bi bi-stars text-primary fs-2"></i>
+          </div>
+          <h3 class="fw-bold mb-0">Give Recognition</h3>
+          <p class="text-muted small">Spread positivity across the team!</p>
         </div>
         
-        <div class="card-body p-4">
+        <div class="card-body p-4 pt-0">
           <form [formGroup]="recognitionForm" (ngSubmit)="onSubmit()">
             
-            <div class="row mb-3">
+            <div class="row g-2 mb-3">
               <div class="col-8 position-relative">
-                <label class="form-label fw-semibold">Search Employee</label>
+                <label class="form-label fw-semibold small">Search Employee</label>
                 <div class="input-group">
-                  <span class="input-group-text bg-white border-2 border-end-0"><i class="bi bi-search"></i></span>
-                  <input type="text" class="form-control border-2 border-start-0" 
+                  <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                  <input type="text" class="form-control bg-light border-0 shadow-none" 
                          placeholder="Type name..." formControlName="employeeSearch"
                          (input)="onSearchChange($event)">
                 </div>
                 
-                <ul class="list-group position-absolute w-100 z-3 shadow-sm" *ngIf="filteredEmployees.length > 0">
-                  <li class="list-group-item list-group-item-action cursor-pointer" 
+                <ul class="list-group position-absolute w-100 z-3 shadow-lg mt-1" *ngIf="filteredEmployees.length > 0">
+                  <li class="list-group-item list-group-item-action border-0 py-2" 
                       *ngFor="let emp of filteredEmployees"
                       (click)="selectEmployee(emp)">
-                    {{ emp.name }} <small class="text-muted">({{ emp.id }})</small>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-xs me-2">{{ emp.name.charAt(0) }}</div>
+                      <div>
+                        <div class="fw-bold small">{{ emp.name }}</div>
+                        <div class="text-muted extra-small">ID: {{ emp.id }}</div>
+                      </div>
+                    </div>
                   </li>
                 </ul>
               </div>
 
               <div class="col-4">
-                <label class="form-label fw-semibold">Emp ID</label>
-                <input type="text" class="form-control border-2 bg-light text-center fw-bold" 
+                <label class="form-label fw-semibold small">ID</label>
+                <input type="text" class="form-control bg-light border-0 text-center fw-bold text-primary shadow-none" 
                        formControlName="employeeId" readonly>
               </div>
             </div>
 
-            <hr class="my-4 text-muted">
+            <hr class="my-3 opacity-25">
 
-            <div class="row mb-3">
-              <div class="col-12 mb-3">
-                <label class="form-label fw-semibold">Badge Type</label>
-                <select class="form-select border-2" formControlName="badgeType">
-                  <option value="" disabled>Select a badge...</option>
-                  <option value="Team Player">🤝 Team Player</option>
-                  <option value="Problem Solver">💡 Problem Solver</option>
-                  <option value="Above & Beyond">🚀 Above & Beyond</option>
-                </select>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Award Badge</label>
+              <div class="row g-2">
+                <div class="col-12">
+                  <select class="form-select border-2" formControlName="badgeType" [ngClass]="getBadgeTheme()">
+                    <option value="" disabled>Choose a badge...</option>
+                    <option value="Team Player">🤝 Team Player</option>
+                    <option value="Problem Solver">💡 Problem Solver</option>
+                    <option value="Leader">🚀 Leader</option>
+                    <option value="Innovator">✨ Innovator</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Points (Max 10)</label>
-              <div class="input-group">
-                <input type="number" class="form-control border-2" 
-                       placeholder="1-10" formControlName="points"
-                       [class.is-invalid]="f['points'].touched && f['points'].errors">
-                <!-- <span class="input-group-text border-2  fw-bold text-dark">/ 10</span> -->
-                <div class="invalid-feedback">Enter a value between 1 and 10.</div>
+            <div class="mb-3 bg-light p-3 rounded-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label fw-semibold small mb-0">Impact Score</label>
+                <span class="badge bg-primary rounded-pill">{{ recognitionForm.get('points')?.value }} Points</span>
+              </div>
+              <input type="range" class="form-range" min="1" max="10" step="1" formControlName="points">
+              <div class="d-flex justify-content-between x-small text-muted">
+                <span>Good</span>
+                <span>Exceptional</span>
               </div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-semibold">Why are you recognizing them?</label>
+              <label class="form-label fw-semibold small">Appreciation Note</label>
               <textarea class="form-control border-2" rows="3" 
-                        placeholder="Write a short appreciation note..." 
+                        placeholder="What made their work stand out?" 
                         formControlName="comment"></textarea>
             </div>
 
             <div class="d-grid">
               <button type="submit" [disabled]="recognitionForm.invalid || !selectedEmp" 
-                      class="btn btn-primary btn-lg rounded-pill shadow-sm py-3 fw-bold">
-                Confirm Recognition
+                      class="btn btn-primary btn-lg rounded-pill shadow py-3 fw-bold">
+                <i class="bi bi-send-fill me-2"></i>Confirm & Send
               </button>
             </div>
 

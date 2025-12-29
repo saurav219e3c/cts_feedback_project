@@ -26,34 +26,41 @@
 
 /* Layout */
 .layout {
-  display: flex;
+  position: relative; /* Added */
+  display: block;    /* Changed from flex to block */
   height: calc(100vh - 60px);
+  width: 100%;
 }
+
 
 /* Sidebar */
 .sidebar {
   width: 250px;
   height: 100%;
+  position: absolute; /* Added: Removes it from the layout flow */
+  left: 0;
+  top: 0;
+  z-index: 1050;      /* Added: Higher than navbar/content */
+  background-color: white;
   border-right: 1px solid #dee2e6;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease; /* Use transform for better performance */
   overflow-x: hidden;
   white-space: nowrap;
 }
-
 /* Closed state for Sidebar */
 .sidebar-closed {
-  width: 0;
+  transform: translateX(-100%); /* Slides the sidebar completely off-screen */
   border-right: none;
 }
 
 /* Content Area */
 .content {
-  flex: 1;
+  width: 100%;        /* Always stay full width */
+  height: 100%;
   padding: 20px;
   overflow-y: auto;
-  transition: all 0.3s ease;
+  /* Remove flex: 1 and transition: all */
 }
-
 /* Sidebar Menu Items */
 .sidebar-menu .nav-link {
   padding: 12px 15px;
@@ -71,4 +78,14 @@
 .sidebar-menu .nav-link.active {
   background-color: #0d6efd;
   color: white;
+}
+
+.sidebar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3); /* Dark tint */
+  z-index: 1045; /* Sits behind sidebar (1050) but above content */
 }
