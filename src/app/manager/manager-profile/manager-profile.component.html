@@ -1,44 +1,91 @@
-<div class="max-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg">
+<div class="min-h-screen bg-gray-100 p-6 flex flex-col items-center gap-6">
 
-    <!-- Profile Image -->
-    <div class="flex justify-center mb-4">
-      <div
-        class="w-32 h-32 rounded-full border-4 border-blue-500 object-cover bg-green-700 flex items-center justify-center text-white text-4xl font-bold">
-        {{ getInitials(manager.name) }}</div>
+  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-4xl">
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      
+      <div class="flex-shrink-0">
+        <div class="w-32 h-32 rounded-full border-4 border-blue-500 bg-green-700 flex items-center justify-center text-white text-4xl font-bold uppercase">
+          {{ getInitials(manager.name) }}
+        </div>
+      </div>
+
+      <div class="flex-grow  md:text-left">
+        <h2 class="text-3xl font-bold text-gray-800">{{ manager.name }}</h2>
+        <p class="text-blue-600 font-medium mb-4 text-lg">Manager</p>
+        
+        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+          <button (click)="toggleEdit()" 
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-sm">
+            {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+          </button>
+
+          <button *ngIf="isEditing" (click)="saveChanges()" 
+            class="px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition shadow-sm">
+            Save Changes
+          </button>
+
+          <a routerLink="/manager" 
+            class="px-6 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-sm">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+    
+    <div class="bg-white shadow-md rounded-xl p-6">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+        Professional Details
+      </h3>
+      <div class="space-y-4">
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500 font-medium">Manager ID</span>
+          <span class="text-gray-900 font-semibold">{{ manager.id }}</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500 font-medium">Department</span>
+          <span class="text-gray-900">{{ manager.department }}</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500 font-medium">Join Date</span>
+          <span class="text-gray-900">{{ manager.joinDate }}</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500 font-medium">Status</span>
+          <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-bold uppercase">Active</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Name -->
-    <h2 class="text-center text-2xl font-semibold text-gray-800">
-      {{ manager.name }}
-    </h2>
+    <div class="bg-white shadow-md rounded-xl p-6">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-green-500 rounded-full"></span>
+        Contact Information
+      </h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Email Address</label>
+          <input *ngIf="isEditing" [(ngModel)]="manager.email" 
+                 class="w-full p-2 border border-blue-300 rounded focus:ring-2 focus:ring-blue-200 outline-none">
+          <div *ngIf="!isEditing" class="p-2 bg-gray-50 rounded border text-gray-700">{{ manager.email }}</div>
+        </div>
 
-    <!-- Role -->
-    <p class="text-center text-sm text-gray-500 mb-6">
-      Manager
-    </p>
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+          <input *ngIf="isEditing" [(ngModel)]="manager.phone" 
+                 class="w-full p-2 border border-blue-300 rounded focus:ring-2 focus:ring-blue-200 outline-none">
+          <div *ngIf="!isEditing" class="p-2 bg-gray-50 rounded border text-gray-700">{{ manager.phone }}</div>
+        </div>
 
-    <!-- Details -->
-    <div class="space-y-3">
-      <div class="flex justify-between text-gray-700">
-        <span class="font-medium">Manager ID:</span>
-        <span>{{ manager.id }}</span>
-      </div>
-
-      <div class="flex justify-between text-gray-700">
-        <span class="font-medium">Email:</span>
-        <span class="text-blue-600">{{ manager.email }}</span>
-      </div>
-      <div class="flex justify-between text-gray-700">
-        <span class="font-medium">Email</span>
-        <span class="text-blue-600">{{ manager.email }}</span>
-      </div>
-      <div class="flex justify-between items-center ml-23">
-        <a class="btn btn-danger fw-bold text-white w-40 rounded shadow-sm d-flex align-items-center gap-2 ml-12 mt-4"
-          routerLink="/manager" routerLinkActive="active">
-
-          <span class="ml-8.5">Logout</span>
-        </a>
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Office Location</label>
+          <input *ngIf="isEditing" [(ngModel)]="manager.location" 
+                 class="w-full p-2 border border-blue-300 rounded focus:ring-2 focus:ring-blue-200 outline-none">
+          <div *ngIf="!isEditing" class="p-2 bg-gray-50 rounded border text-gray-700">{{ manager.location }}</div>
+        </div>
       </div>
     </div>
 
