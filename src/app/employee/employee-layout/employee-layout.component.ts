@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -10,9 +10,39 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 })
 export class EmployeeLayoutComponent {
   isSidebarOpen = false;
+  isProfileOpen = false;
+
+  // Dummy Data
+  userName: string = 'Tejas Thorat';
+  userEmail: string = 'tejas.k@company.com';
+  employeeId: string = '2463723';
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  toggleProfile(event: Event): void {
+    event.stopPropagation(); // Prevents document click from closing it immediately
+    this.isProfileOpen = !this.isProfileOpen;
+  }
+
+  // Closes dropdown when clicking anywhere else
+  @HostListener('document:click', ['$event'])
+  closeProfile() {
+    this.isProfileOpen = false;
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '??';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  logout(): void {
+    alert('Logging out...');
   }
 
 }

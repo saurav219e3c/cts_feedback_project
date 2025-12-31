@@ -10,11 +10,15 @@ import { RouterLink } from '@angular/router';
   styleUrl: './employee-dashboard.component.css'
 })
 export class EmployeeDashboardComponent {
-  feedbackGiven = 12;
-  feedbackReceived = 8;
-  recognitionPoints = 150;
-  notifications = 3;
+ today = new Date();
+  
+  // Data for the summary cards
+  stats = [
+    { label: 'Feedback Given', value: 12, trend: 8, icon: 'bi-pencil-square', bgClass: 'bg-primary-soft' },
+    { label: 'Feedback Received', value: 24, trend: 12, icon: 'bi-chat-left-dots', bgClass: 'bg-warning-soft' },
+    { label: 'Recognition Points', value: 450, trend: 20, icon: 'bi-award', bgClass: 'bg-success-soft' },
+    { label: 'Notifications', value: 5, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
+  ];
 
-  // Added sample data so your Recent Activity list isn't empty
-  recentActivities = [];
+  name:string='Tejas';
 }

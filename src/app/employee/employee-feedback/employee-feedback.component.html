@@ -1,69 +1,47 @@
-<div class="container-fluid mt-3">
- 
-  <!-- Page Title -->
-  <!-- <div class="mb-4">
-    <h4 class="fw-bold">Received Feedback</h4>
-    <p class="text-muted">Feedback shared by your peers and managers</p>
-  </div> -->
-
-  <div class="mb-4">
-    <h2 class="fw-bold">
-    <i class="bi bi-chat-square-dots"></i> Received Feedback</h2>
-
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-12 text-center">
+      <h2 class="display-6 fw-bold text-dark">Received FeedBack</h2>
+      <p class="text-muted mx-auto" style="max-width: 500px;">
+        Real-time feedback from your team. Keep up the great work!
+      </p>
+    </div>
   </div>
- 
-  <!-- Feedback Cards -->
-  <div class="row g-3">
- 
-    <!-- Feedback Card -->
-    <div class="col-md-6">
-      <div class="card shadow-sm feedback-card">
-        <div class="card-body">
- 
-          <div class="d-flex justify-content-between">
-            <h6 class="fw-bold mb-1">From: Manager</h6>
-            <span class="badge bg-success">Positive</span>
+
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let item of feedbackList">
+      <div class="modern-card">
+        <div class="category-tag">{{ item.category }}</div>
+        
+        <div class="card-content">
+          <div class="d-flex align-items-center mb-4">
+  <div class="avatar-wrapper">
+    <div [class]="item.isAnonymous ? 'avatar-anon' : 'avatar-main'">
+      <i *ngIf="item.isAnonymous" class="bi bi-incognito"></i>
+      <span *ngIf="!item.isAnonymous">{{ getInitials(item.senderName) }}</span>
+    </div>
+    <div class="status-indicator" [style.background]="item.isAnonymous ? '#94a3b8' : '#22c55e'"></div>
+  </div>
+  
+  <div class="ms-3">
+    <h6 class="mb-0 fw-bold" [class.text-muted]="item.isAnonymous">
+      {{ item.isAnonymous ? 'Anonymous Colleague' : item.senderName }}
+    </h6>
+    <span class="text-overline">{{ item.date | date:'longDate' }}</span>
+  </div>
+</div>
+
+          <div class="feedback-body">
+            <p class="text-secondary mb-0">"{{ item.comments }}"</p>
           </div>
- 
-          <p class="text-muted small mb-2">Rating: ⭐⭐⭐⭐☆</p>
- 
-          <p>
-            You are doing excellent work on the current project.
-            Keep improving your communication skills.
-          </p>
- 
-          <div class="text-end text-muted small">
-            Received on: 20 Dec 2025
-          </div>
- 
         </div>
+
+        <!-- <div class="card-action">
+          <button class="btn-action">
+            <i class="bi bi-heart-fill me-2"></i>Acknowledge
+          </button>
+        </div> -->
       </div>
     </div>
- 
-    <!-- Another Card -->
-    <div class="col-md-6">
-      <div class="card shadow-sm feedback-card">
-        <div class="card-body">
- 
-          <div class="d-flex justify-content-between">
-            <h6 class="fw-bold mb-1">From: Team Lead</h6>
-            <span class="badge bg-warning text-dark">Neutral</span>
-          </div>
- 
-          <p class="text-muted small mb-2">Rating: ⭐⭐⭐☆☆</p>
- 
-          <p>
-            Your technical skills are good, but focus more on meeting deadlines.
-          </p>
- 
-          <div class="text-end text-muted small">
-            Received on: 18 Dec 2025
-          </div>
- 
-        </div>
-      </div>
-    </div>
- 
   </div>
- 
 </div>

@@ -1,36 +1,71 @@
-import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, OnInit, signal } from '@angular/core';
+// interface Feedback {
+//   id: string;
+//   employeeName: string;
+//   category: string;
+//   comment: string;
+//   date: string;
+//   isAnonymous: boolean;
+// }
+
 interface Feedback {
-  id: string;
-  employeeName: string;
+  id: number;
+  senderName: string;
   category: string;
-  comment: string;
+  comments: string;
   date: string;
   isAnonymous: boolean;
 }
 
 @Component({
   selector: 'app-employee-feedback',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './employee-feedback.component.html',
   styleUrl: './employee-feedback.component.css'
 })
 
 
-export class EmployeeFeedbackComponent {
+export class EmployeeFeedbackComponent implements OnInit {
 
-  // Using Signals (Angular 17/18/19 feature)
-  feedbackList = signal<Feedback[]>([
-    { id: 'EMP-101', employeeName: 'John Doe', category: 'Culture', comment: 'Great team bonding last Friday!', date: '2025-12-20', isAnonymous: false },
-    { id: 'HIDDEN', employeeName: 'Anonymous', category: 'Management', comment: 'Need more clarity on the new project goals.', date: '2025-12-21', isAnonymous: true },
-    { id: 'EMP-305', employeeName: 'Sarah Connor', category: 'Facilities', comment: 'The coffee machine in block B is broken.', date: '2025-12-22', isAnonymous: false },
-  ]);
+  feedbackList=[
+    {
+      id: 1,
+      senderName: "Sarah Jenkins",
+      category: "Leadership",
+      comments: "Great job leading the sprint planning yesterday. You kept everyone on track and focused!",
+      date: "2023-10-15"
+    },
+    {
+      id: 2,
+      senderName: "Michael Chen",
+      category: "Technical",
+      comments: "Your code review comments were incredibly helpful. I learned a lot about optimizing SQL queries.",
+      date: "2023-10-12"
+    },
+    {
+      id: 3,
+      senderName: "Emily Rodriguez",
+      category: "Teamwork",
+      comments: "Thanks for jumping in to help with the client presentation at the last minute. Total lifesaver!",
+      date: "2023-10-10"
+    },
+    {
+      id: 4,
+      senderName: "Emily Rodriguez",
+      category: "Teamwork",
+      comments: "Thanks for jumping in to help with the client presentation at the last minute. Total lifesaver!",
+      date: "2023-10-10",
+      isAnonymous:true
+    }
+  ];
 
-  deleteFeedback(index: number) {
-    const current = this.feedbackList();
-    current.splice(index, 1);
-    this.feedbackList.set([...current]);
+  constructor() { }
+
+  ngOnInit(): void { }
+
+  // Helper to get initials for the avatar
+  getInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
   }
-
-  
-
 }

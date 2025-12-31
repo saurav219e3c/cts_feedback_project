@@ -20,7 +20,10 @@ export class ReceivedRecognitionComponent {
  recognitions = signal<Recognition[]>([
     { to: 'Amit Sharma', from: 'Admin', points: 9, badge: 'Innovator', message: 'The new API optimization is saving us 40% on server costs. Brilliant!', date: 'Dec 29, 2025' },
     { to: 'Priya Kapoor', from: 'Rahul V.', points: 10, badge: 'Leader', message: 'Exceptional leadership during the Q4 release pressure.', date: 'Dec 28, 2025' },
-    { to: 'John Doe', from: 'Sarah C.', points: 8, badge: 'Team Player', message: 'Always goes out of the way to mentor junior developers.', date: 'Dec 27, 2025' }
+    { to: 'John Doe', from: 'Sarah C.', points: 8, badge: 'Team Player', message: 'Always goes out of the way to mentor junior developers.', date: 'Dec 27, 2025' },
+    { to: 'Amit Sharma', from: 'Admin', points: 9, badge: 'Innovator', message: 'The new API optimization is saving us 40% on server costs. Brilliant!', date: 'Dec 29, 2025' },
+    { to: 'Priya Kapoor', from: 'Rahul V.', points: 10, badge: 'Leader', message: 'Exceptional leadership during the Q4 release pressure.', date: 'Dec 28, 2025' },
+    {to:'Abhishek', from:'tejas',points:10,badge:'Leader',message:'U Are doing Great Job Brother',date:'dec 31, 2025'}
   ]);
 
   getBadgeTheme(badge: string) {
