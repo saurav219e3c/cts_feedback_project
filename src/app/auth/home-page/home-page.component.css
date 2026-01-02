@@ -85,13 +85,6 @@
   align-items: center;
   box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
-
-/* .glass-card:hover {
-  background: rgba(255, 255, 255, 0.24);
-  transform: translateY(-6px);
-  border-color: #8b6f52;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
-} */
  .glass-card:hover {
   background: rgba(255, 255, 255, 0.24);
   transform: translateY(-6px);

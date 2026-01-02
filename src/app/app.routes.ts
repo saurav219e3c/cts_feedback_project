@@ -13,6 +13,4 @@ export const APP_ROUTES: Routes = [
       import('./auth/auth.routes').then(m => m.AUTH_ROUTES),
   },
 
-  // Optional: 404 route
-  { path: '**', redirectTo: 'auth' },
 ];
