@@ -2,45 +2,50 @@
   <div class="text-center mb-5">
     <h1 class="display-6 fw-bold text-dark">Employee Recognition Feed</h1>
     <div class="header-line mx-auto"></div>
+    <small class="text-muted">Viewing badges for: <strong>{{ currentUser }}</strong></small>
+  </div>
+
+  <div *ngIf="recognitions.length === 0" class="text-center py-5">
+    <h4 class="text-muted">No badges earned yet! 🏆</h4>
   </div>
 
   <div class="row">
-    <div class="col-md-6 col-lg-4 mb-5" *ngFor="let item of recognitions()">
+    <div class="col-md-6 col-lg-4 mb-5" *ngFor="let item of recognitions">
       
       <div class="recognition-card shadow-sm h-100 position-relative"
            #card
            style="transition: border-color 0.3s ease;"
-           (mouseenter)="card.style.borderColor = getBadgeTheme(item.badge, item.points).color"
+           (mouseenter)="card.style.borderColor = getBadgeTheme(item.BadgeType, item.points).color"
            (mouseleave)="card.style.borderColor = '#f1f3f5'">
         
         <div class="points-circle shadow" 
-             [style.background-color]="getBadgeTheme(item.badge, item.points).color">
+             [style.background-color]="getBadgeTheme(item.BadgeType, item.points).color">
           <span class="score">{{ item.points }}</span>
           <small>pts</small>
         </div>
 
         <div class="card-body p-4">
           <div class="mb-3">
-            <span class="badge-tag" [style.color]="getBadgeTheme(item.badge, item.points).color">
-              <i class="bi" [ngClass]="getBadgeTheme(item.badge, item.points).icon"></i> 
-              {{ item.badge }}
+            <span class="badge-tag" [style.color]="getBadgeTheme(item.BadgeType, item.points).color">
+              <i class="bi" [ngClass]="getBadgeTheme(item.BadgeType, item.points).icon"></i> 
+              {{ item.BadgeType }}
             </span>
           </div>
 
           <div class="quote-container">
             <i class="bi bi-quote fs-2 text-light-emphasis opacity-25"></i>
-            <p class="quote-text">{{ item.message }}</p>
+            <p class="quote-text">{{ item.comment }}</p>
           </div>
 
           <div class="d-flex align-items-center mt-4 pt-3 border-top border-light">
             <div class="user-avatar shadow-sm">
-              {{ item.to.charAt(0) }}
+              {{ item.toUserId.charAt(0) }}
             </div>
             <div class="ms-3">
-              <h6 class="mb-0 fw-bold text-dark">{{ item.to }}</h6>
+              <h6 class="mb-0 fw-bold text-dark">{{ item.toUserId }}</h6>
               <div class="text-muted x-small d-flex flex-column">
-                <span>From: <strong>{{ item.from }}</strong></span>
-                <span>{{ item.date }}</span>
+                <span>From: <strong>{{ item.fromUserId }}</strong></span>
+                <span>{{ item.date | date:'mediumDate' }}</span>
               </div>
             </div>
           </div>

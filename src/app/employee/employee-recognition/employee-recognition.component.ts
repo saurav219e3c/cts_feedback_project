@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { EmployeeService, Recognition } from '../service/employee.service';
 
 @Component({
   selector: 'app-employee-recognition',
@@ -9,20 +10,28 @@ import { RouterLink } from '@angular/router';
   templateUrl: './employee-recognition.component.html',
   styleUrl: './employee-recognition.component.css'
 })
-export class EmployeeRecognitionComponent {
+export class EmployeeRecognitionComponent implements OnInit {
 recognitionForm: FormGroup;
-  
-  employees = [
-    { id: 'EMP101', name: 'John Doe' },
-    { id: 'EMP102', name: 'Jane Smith' },
-    { id: 'EMP103', name: 'Robert Wilson' },
-    { id: 'EMP104', name: 'Sarah Parker' }
-  ];
-  
-  filteredEmployees: any[] = [];
-  selectedEmp: any = null;
 
-  constructor(private fb: FormBuilder) {
+employees:any[]=[]; // from service
+
+filteredEmployees:any[]=[];
+
+selectedEmp: any = null;
+
+
+  
+  // employees = [
+  //   { id: 'EMP101', name: 'John Doe' },
+  //   { id: 'EMP102', name: 'Jane Smith' },
+  //   { id: 'EMP103', name: 'Robert Wilson' },
+  //   { id: 'EMP104', name: 'Sarah Parker' }
+  // ];
+  
+  // filteredEmployees: any[] = [];
+  // selectedEmp: any = null;
+
+  constructor(private fb: FormBuilder,private empService:EmployeeService) {
     this.recognitionForm = this.fb.group({
       employeeSearch: ['', Validators.required],
       employeeId: [{ value: '', disabled: true }], 
@@ -31,6 +40,12 @@ recognitionForm: FormGroup;
       points: [5, [Validators.required, Validators.min(1), Validators.max(10)]],
       comment: ['', [Validators.required, Validators.minLength(5)]]
     });
+  }
+  ngOnInit(): void {
+    //load employee
+
+    this.employees = this.empService.getDummyEmployees();
+
   }
 
   get f() { return this.recognitionForm.controls; }
@@ -66,14 +81,25 @@ recognitionForm: FormGroup;
   }
 
   onSubmit() {
-    if (this.recognitionForm.valid && this.selectedEmp) {
-      // getRawValue() ensures we get the disabled employeeId field
-      const finalData = this.recognitionForm.getRawValue();
-      console.log('Recognition Sent:', finalData);
-      
+   if (this.recognitionForm.valid && this.selectedEmp) {
+      const rawForm = this.recognitionForm.getRawValue();
+
+      // 5. MAP FORM DATA TO YOUR ENTITIES
+      const recognitionData: Recognition = {
+        fromUserId: this.empService.getCurrentUser(), // Get logged-in user
+        toUserId: rawForm.employeeId,                 // Mapped from form
+        BadgeType: rawForm.badgeType,                 // Mapped from form
+        points: rawForm.points,
+        comment: rawForm.comment,
+        date: new Date().toISOString().substring(0, 10)
+      };
+
+      // 6. Save to Service
+      this.empService.saveRecognition(recognitionData);
+
+      console.log('Saved to DB:', recognitionData);
       alert(`🎉 Recognition Sent to ${this.selectedEmp.name}!`);
       
-      // Reset form to initial state
       this.recognitionForm.reset({
         points: 5,
         badgeType: '',

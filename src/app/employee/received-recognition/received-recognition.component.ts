@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { EmployeeService, Recognition } from '../service/employee.service';
 
-interface Recognition {
-  to: string;
-  from: string;
-  points: number; 
-  badge: 'Team Player' | 'Leader' | 'Problem Solver' | 'Innovator';
-  message: string;
-  date: string;
-}
+// interface Recognition {
+//   to: string;
+//   from: string;
+//   points: number; 
+//   badge: 'Team Player' | 'Leader' | 'Problem Solver' | 'Innovator';
+//   message: string;
+//   date: string;
+// }
 
 @Component({
   selector: 'app-received-recognition',
@@ -18,34 +19,49 @@ interface Recognition {
   templateUrl: './received-recognition.component.html',
   styleUrl: './received-recognition.component.css'
 })
-export class ReceivedRecognitionComponent {
+export class ReceivedRecognitionComponent implements OnInit {
   
-  recognitions = signal<Recognition[]>([
-    { to: 'Amit Sharma', from: 'Admin', points: 9, badge: 'Innovator', message: 'The new API optimization is saving us 40% on server costs. Brilliant!', date: 'Dec 29, 2025' },
-    { to: 'Priya Kapoor', from: 'Rahul V.', points: 7, badge: 'Leader', message: 'Exceptional leadership during the Q4 release pressure.', date: 'Dec 28, 2025' },
-    { to: 'John Doe', from: 'Sarah C.', points: 5, badge: 'Team Player', message: 'Always goes out of the way to mentor junior developers.', date: 'Dec 27, 2025' },
-    { to: 'Abhishek', from: 'Tejas', points: 10, badge: 'Leader', message: 'U Are doing Great Job Brother', date: 'Dec 31, 2025' }
-  ]);
+ // 2. Use Service Interface
+  recognitions: Recognition[] = []; 
+  currentUser: string = '';
 
-  
-  getBadgeTheme(badge: string, points: number) {
-    // Mapping 
+  constructor(private empService: EmployeeService) {}
+
+  ngOnInit(): void {
+    this.currentUser = this.empService.getCurrentUser();
+
+    // 3. Load Data from Service
+    this.recognitions = this.empService.getMyRecognitions();
+    
+    // Sort so newest (top of list) appears first? Optional.
+    // this.recognitions.reverse(); 
+  }
+
+  // 4. Update Helper for Badge Theme
+  // Note: Argument 'badge' type changed to string to match interface
+ getBadgeTheme(badge: string, points: number) {
     const icons: Record<string, string> = {
       'Leader': 'bi-rocket-takeoff-fill',
       'Team Player': 'bi-people-fill',
       'Problem Solver': 'bi-cpu-fill',
-      'Innovator': 'bi-lightbulb-fill'
+      'Innovator': 'bi-lightbulb-fill',
+      'Rising Star': 'bi-star-fill',
+      'Spot Award': 'bi-trophy-fill'
     };
 
-    // Logic for dynamic coloring based on points
     let themeColor: string;
 
-    if (points >= 9) {
-      themeColor = '#2ed573'; 
+    // YOUR LOGIC:
+    // 8 to 10 -> Green
+    // 6 to 7  -> Yellow
+    // 1 to 5  -> Red
+    
+    if (points >= 8) {
+      themeColor = '#2ed573'; // Green
     } else if (points >= 6) {
-      themeColor = '#ffa502'; 
+      themeColor = '#ffa502'; // Yellow/Orange
     } else {
-      themeColor = '#ff4757'; 
+      themeColor = '#ff4757'; // Red
     }
 
     return {
