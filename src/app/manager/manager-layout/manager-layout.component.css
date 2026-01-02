@@ -88,3 +88,91 @@
     display: none !important;
   }
 }
+/* Profile Icon Styling */
+.profile-icon {
+  width: 38px;
+  height: 38px;
+  background-color: #15803d; /* Tailwind green-700 */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.profile-icon:hover {
+  transform: scale(1.05);
+}
+
+/* Notification Badge */
+.badge-notify {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+/* Square Profile Popup */
+.profile-popup {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  width: 220px;
+  background: white;
+  z-index: 1100;
+  animation: slideIn 0.2s ease-out;
+}
+
+.popup-header {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.popup-header .name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+}
+
+.popup-header .email {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.action-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  border: none;
+  padding: 8px 12px;
+}
+
+.action-btn:hover {
+  background-color: #f8fafc;
+  color: #4f46e5;
+}
+
+.action-btn.logout {
+  color: #dc3545;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cursor-pointer { cursor: pointer; }

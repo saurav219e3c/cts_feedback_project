@@ -1,71 +1,67 @@
+<header class="topbar d-flex align-items-center justify-content-between px-3 px-md-4">
+  <div class="d-flex align-items-center">
+    <button
+      class="hamburger"
+      aria-label="Toggle navigation"
+      [attr.aria-expanded]="isSidebarOpen"
+      (click)="toggleSidebar()"
+    >
+      <span></span><span></span><span></span>
+    </button>
+    <h1 class="topbar-title ms-3 mb-0">Manager Portal</h1>
+  </div>
 
-<!-- Top bar with hamburger -->
-<header class="topbar d-flex align-items-center">
-  <button
-    class="hamburger"
-    aria-label="Toggle navigation"
-    [attr.aria-expanded]="isSidebarOpen"
-    (click)="toggleSidebar()"
-  >
-    <span></span><span></span><span></span>
-  </button>
+  <div class="d-flex align-items-center gap-3">
+    
+    <a 
+      routerLink="/manager/notifications" 
+      routerLinkActive="active-link"
+      class="notification-box position-relative cursor-pointer text-decoration-none"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="text-secondary" viewBox="0 0 16 16">
+        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917z"/>
+      </svg>
+      <span *ngIf="notificationCount > 0" class="badge-notify">
+        {{ notificationCount }}
+      </span>
+    </a>
 
-  <h1 class="topbar-title">Manager Portal </h1>
+    <div class="profile-container position-relative">
+      <div (click)="toggleProfile()" class="profile-icon">
+        {{ getInitials(manager.name) }}
+      </div>
+
+      <div *ngIf="isProfileOpen" class="profile-popup shadow-lg border rounded-lg">
+        <div class="popup-header">
+          <p class="name">{{ manager.name }}</p>
+          <p class="email">{{ manager.email }}</p>
+        </div>
+        <div class="popup-actions d-flex flex-column p-2 gap-1">
+          <a routerLink="/manager/profile" (click)="isProfileOpen = false" class="btn btn-sm text-start action-btn">
+            View Profile
+          </a>
+          <a routerLink="/manager" (click)="isProfileOpen = false" class="btn btn-sm text-start action-btn logout">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>
 
 <div class="layout">
-  <!-- Sidebar -->
-  <aside class="sidebar" [class.open]="isSidebarOpen" role="navigation" aria-label="Sidebar">
+  <aside class="sidebar" [class.open]="isSidebarOpen" role="navigation">
     <nav class="list-group list-group-flush">
-
-      <a class="list-group-item list-group-item-action"
-         routerLink="/manager"
-         routerLinkActive="active"
-         [routerLinkActiveOptions]="{ exact: true }">
-        Dashboard
-      </a>
-
-      <a class="list-group-item list-group-item-action"
-         routerLink="/manager/notifications"
-         routerLinkActive="active">
-        Notifications
-      </a>
-
-      <a class="list-group-item list-group-item-action"
-         routerLink="/manager/profile"
-         routerLinkActive="active">
-        Profile
-      </a>
-
-      <a class="list-group-item list-group-item-action"
-         routerLink="/manager/feedback"
-         routerLinkActive="active">
-        Reports
-      </a>
-
-      
-<a
-  class="btn btn-danger fw-bold text-white w-40 rounded shadow-sm d-flex align-items-center gap-2 ml-12 mt-4"
-  routerLink="/manager"
-  routerLinkActive="active"
->
-  
-      <span class="ml-8.5">Logout</span>
-</a>
-
+      <a class="list-group-item list-group-item-action" routerLink="/manager" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+      <a class="list-group-item list-group-item-action" routerLink="/manager/notifications" routerLinkActive="active">Notifications</a>
+      <a class="list-group-item list-group-item-action" routerLink="/manager/profile" routerLinkActive="active">Profile</a>
+      <a class="list-group-item list-group-item-action" routerLink="/manager/feedback" routerLinkActive="active">Feedback</a>
     </nav>
   </aside>
 
-  <!-- Main content area -->
   <main class="content">
     <router-outlet></router-outlet>
   </main>
 </div>
 
-<!-- Backdrop for mobile when sidebar is open -->
-<div
-  class="backdrop"
-  *ngIf="isSidebarOpen"
-  (click)="closeSidebar()"
-  aria-hidden="true"
-></div>
+<div class="backdrop" *ngIf="isSidebarOpen" (click)="closeSidebar()"></div>
