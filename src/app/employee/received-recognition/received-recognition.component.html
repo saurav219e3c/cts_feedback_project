@@ -6,20 +6,23 @@
 
   <div class="row">
     <div class="col-md-6 col-lg-4 mb-5" *ngFor="let item of recognitions()">
+      
       <div class="recognition-card shadow-sm h-100 position-relative"
            #card
-           (mouseenter)="card.style.borderColor = getBadgeTheme(item.badge).color"
+           style="transition: border-color 0.3s ease;"
+           (mouseenter)="card.style.borderColor = getBadgeTheme(item.badge, item.points).color"
            (mouseleave)="card.style.borderColor = '#f1f3f5'">
         
-        <div class="points-circle shadow" [style.background-color]="getBadgeTheme(item.badge).color">
+        <div class="points-circle shadow" 
+             [style.background-color]="getBadgeTheme(item.badge, item.points).color">
           <span class="score">{{ item.points }}</span>
           <small>pts</small>
         </div>
 
         <div class="card-body p-4">
           <div class="mb-3">
-            <span class="badge-tag" [style.color]="getBadgeTheme(item.badge).color">
-              <i class="bi" [ngClass]="getBadgeTheme(item.badge).icon"></i> 
+            <span class="badge-tag" [style.color]="getBadgeTheme(item.badge, item.points).color">
+              <i class="bi" [ngClass]="getBadgeTheme(item.badge, item.points).icon"></i> 
               {{ item.badge }}
             </span>
           </div>
@@ -43,6 +46,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

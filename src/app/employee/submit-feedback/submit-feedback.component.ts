@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EmployeeService, Feedback } from '../service/employee.service';
 
 @Component({
   selector: 'app-submit-feedback',
@@ -12,50 +13,79 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class SubmitFeedbackComponent implements OnInit {
   feedbackForm!: FormGroup;
-  
-  employees = ['John Doe (Eng)', 'Jane Smith (HR)', 'Mike Ross (Legal)', 'Rachel Zane (Design)'];
-  categories = ['Work Culture', 'Management', 'Facilities', 'Career Growth', 'Other'];
+  employees: any[] = []; 
+  categories = ['Team Lead', 'Team Member', 'yyyy', 'Career Growth', 'Other'];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private empService: EmployeeService) {}
 
   ngOnInit(): void {
+   
+    // 1. Get the dummy data from your service
+    this.employees = this.empService.getDummyEmployees();
+
     this.feedbackForm = this.fb.group({
-      searchEmployee: [''],
-      employeeId: ['', Validators.required],
+      searchEmployee: ['', Validators.required],
+      // 2. Keep this disabled so users don't type manually; let the logic fill it
+      employeeId: [{ value: '', disabled: true }, Validators.required], 
       category: ['', Validators.required],
       comments: ['', [Validators.required, Validators.minLength(10)]],
       isAnonymous: [false],
       submissionDate: [new Date().toISOString().substring(0, 10), Validators.required]
     });
 
+    // 3. AUTO-FILL LOGIC: Listen to search box changes
+    this.feedbackForm.get('searchEmployee')?.valueChanges.subscribe(name => {
+      const selected = this.employees.find(e => e.name === name);
+      if (selected && !this.feedbackForm.get('isAnonymous')?.value) {
+        this.feedbackForm.get('employeeId')?.setValue(selected.id);
+      }
+    });
+
+    // 4. ANONYMOUS LOGIC
     this.feedbackForm.get('isAnonymous')?.valueChanges.subscribe(isAnon => {
       const idControl = this.feedbackForm.get('employeeId');
       if (isAnon) {
-        idControl?.disable();
         idControl?.setValue('ANONYMOUS');
       } else {
-        idControl?.enable();
-        idControl?.setValue('');
+        idControl?.setValue(''); // Reset so they pick a name again
       }
     });
   }
 
-  // --- ADD THIS METHOD TO FIX THE ERROR ---
   onSubmit(): void {
-    if (this.feedbackForm.valid) {
-      // Use getRawValue() so you get the employeeId even if it is disabled (Anonymous mode)
-      const formData = this.feedbackForm.getRawValue();
-      console.log('Feedback Data Submitted:', formData);
-      
-      alert('Success! Your feedback has been recorded.');
-      
-      // Optional: Reset form after submission
+     if(this.feedbackForm.valid){
+      const formValue = this.feedbackForm.getRawValue();
+
+      const finalData: Feedback ={
+        feedbackId: '', // Service will fill this
+        
+        // ADDED: Who is sending this? (Get from Service)
+        submittedByUserId: this.empService.getCurrentUser(), 
+        
+        // ADDED: Who is this for? (Map it from the form's 'employeeId')
+        targetUserId: formValue.employeeId, 
+
+        // Existing Form Data
+        searchEmployee: formValue.searchEmployee,
+        category: formValue.category,
+        comments: formValue.comments,
+        isAnonymous: formValue.isAnonymous,
+        submissionDate: formValue.submissionDate
+
+
+      };
+
+      this.empService.saveFeedback(finalData);
+
+      console.log('final Data Saved',finalData);
+
+      alert('successs');
+
       this.feedbackForm.reset({
         submissionDate: new Date().toISOString().substring(0, 10),
         isAnonymous: false
       });
-    } else {
-      // Mark all fields as touched to show validation errors
+    }else{
       this.feedbackForm.markAllAsTouched();
     }
   }

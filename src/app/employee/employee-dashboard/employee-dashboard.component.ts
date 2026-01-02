@@ -14,11 +14,12 @@ export class EmployeeDashboardComponent {
   
   // Data for the summary cards
   stats = [
-    { label: 'Feedback Given', value: 12, trend: 8, icon: 'bi-pencil-square', bgClass: 'bg-primary-soft' },
-    { label: 'Feedback Received', value: 24, trend: 12, icon: 'bi-chat-left-dots', bgClass: 'bg-warning-soft' },
-    { label: 'Recognition Points', value: 450, trend: 20, icon: 'bi-award', bgClass: 'bg-success-soft' },
-    { label: 'Notifications', value: 5, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
+    { label: 'Feedback Given', value: 9, trend: 8, icon: 'bi-pencil-square', bgClass: 'bg-primary-soft' },
+    { label: 'Feedback Received', value: 7, trend: 12, icon: 'bi-chat-left-dots', bgClass: 'bg-warning-soft' },
+    { label: 'Recognition Points', value: 4, trend: 20, icon: 'bi-award', bgClass: 'bg-success-soft' },
+    { label: 'Notifications', value: 3, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
   ];
 
   name:string='Tejas';
+  
 }
