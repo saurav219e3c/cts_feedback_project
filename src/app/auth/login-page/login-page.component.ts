@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-login-page',
@@ -17,6 +18,7 @@ export class LoginPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private loginService: LoginService,
     private route: ActivatedRoute
   ) {
     // Initialize form
@@ -48,11 +50,22 @@ onLogin() {
     this.form.markAllAsTouched();
     return;
   }
-  const { username, password } = this.form.value;
-  console.log('Logging in:', { username, password, role: this.role });
 
-  // Navigate to the feature route
-  this.router.navigate(['/auth/home-page']);
+  // Include the role from the URL in the login check
+  const credentials = { 
+    ...this.form.value, 
+    role: this.role 
+  };
+
+  this.loginService.login(credentials).subscribe(user => {
+    if (user) {
+      alert(`Login Successful! Welcome ${user.name}`);
+      // Redirect to home or specific dashboard
+      this.router.navigate(['/auth/home-page']); 
+    } else {
+      alert('Invalid credentials or role. Please try again.');
+    }
+  });
 }
 
 goToRegister() {
