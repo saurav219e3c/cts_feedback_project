@@ -108,7 +108,7 @@
   <div class="layout">
     
     <div id="sidebar" class="sidebar bg-light" [class.sidebar-closed]="!isSidebarOpen">
-      <ul class="nav flex-column sidebar-menu p-2">
+      <ul class="nav flex-column sidebar-menu p-2" (click)="onNavClick()">
         <li class="nav-item">
           <a class="nav-link" routerLink="/employee/dashboard" routerLinkActive="active">
             <i class="bi bi-house-door me-2"></i> Dashboard

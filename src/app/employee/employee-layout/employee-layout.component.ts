@@ -26,6 +26,11 @@ export class EmployeeLayoutComponent {
     this.isProfileOpen = !this.isProfileOpen;
   }
 
+  onNavClick(): void {
+    // Unconditionally close the sidebar (works on Desktop & Mobile)
+    this.isSidebarOpen = false;
+  }
+
   // Closes dropdown when clicking anywhere else
   @HostListener('document:click', ['$event'])
   closeProfile() {
