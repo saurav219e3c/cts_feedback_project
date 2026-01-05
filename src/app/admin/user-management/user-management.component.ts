@@ -1,7 +1,7 @@
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <-- added for ngModel
+import { FormsModule } from '@angular/forms'; 
 
 @Component({
   standalone: true,
@@ -26,10 +26,10 @@ export class UserManagementComponent {
     { id: 112, name: 'somu Patel',  role: 'Employee', feedback: 9,  recognition: 4 },
   ];
 
-  // Search term bound to the input
+  
   searchTerm = '';
 
-  // Derived list based on search (same card template)
+ 
   get filteredUsers() {
     const q = this.searchTerm.trim().toLowerCase();
     if (!q) return this.users;
@@ -39,13 +39,13 @@ export class UserManagementComponent {
       const role = (u.role ?? '').toLowerCase();
       const idStr = String(u.id ?? '').toLowerCase();
 
-      // Match name, id (as string), or role
+      
       return name.includes(q) || role.includes(q) || idStr.includes(q);
     });
   }
 
   onSearchChange(): void {
-    // Hook for future debounce/analytics if needed
+    
   }
 
   clearSearch(): void {

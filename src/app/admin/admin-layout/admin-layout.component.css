@@ -126,11 +126,11 @@
 }
 .brand-title {
   font-weight: 700;
-   color: rgb(5, 178, 246);
+   color: rgb(212, 219, 221);
 }
 .brand-subtitle {
   font-size: 12px;
-   color: rgb(5, 178, 246);
+   color: rgb(212, 219, 221);
 }
 
 /* Sidebar menu items */
@@ -144,7 +144,7 @@
   padding: 12px 12px;
   margin: 6px 4px;
   border-radius: var(--radius-sm);
-  color: rgb(5, 178, 246);
+  color: rgb(217, 228, 232);
   text-decoration: none;
   border: 1px solid transparent;
   transition: background 160ms ease, color 160ms ease, transform 160ms ease,
@@ -153,7 +153,7 @@
 }
 .menu-item i {
   font-size: 18px;
-  color: rgb(26, 15, 234);
+  color: rgb(212, 219, 221);
 }
 .menu-item:hover {
   background: #f1f5f9;
