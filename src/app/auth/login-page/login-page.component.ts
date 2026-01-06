@@ -3,6 +3,8 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../service/login.service';
+import { ADMIN_ROUTES } from '../../admin/admin.routes';
+import { AUTH_ROUTES } from '../auth.routes';
 
 @Component({
   selector: 'app-login-page',
@@ -14,6 +16,7 @@ import { LoginService } from '../service/login.service';
 export class LoginPageComponent implements OnInit {
   role?: string;
   form: FormGroup;
+  admin_logged = false;
 
   constructor(
     private fb: FormBuilder,
@@ -59,9 +62,12 @@ onLogin() {
 
   this.loginService.login(credentials).subscribe(user => {
     if (user) {
-      alert(`Login Successful! Welcome ${user.name}`);
+      // alert(`Login Successful! Welcome ${user.name}`);
       // Redirect to home or specific dashboard
-      this.router.navigate(['/auth/home-page']); 
+
+      // this.router.navigate(['/auth/home-page']);
+      // this.admin_logged=true;
+      this.router.navigate(['/admin']); 
     } else {
       alert('Invalid credentials or role. Please try again.');
     }
