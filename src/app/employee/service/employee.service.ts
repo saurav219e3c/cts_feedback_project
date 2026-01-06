@@ -139,7 +139,7 @@ export class EmployeeService{
 
         data.feedbackId = 'FB-'+Date.now();
 
-        currentData.push(data);
+        currentData.push(data);//local
 
         localStorage.setItem(this.storagekey,JSON.stringify(currentData));
     }
@@ -201,7 +201,7 @@ export class EmployeeService{
   }
 
   //get reconition 
-  // 2. LOGIC TO GET MY RECOGNITIONS
+  
   getMyRecognitions(): Recognition[] {
     // Get Real Data from LocalStorage
     const localData = localStorage.getItem(this.recognitionKey);

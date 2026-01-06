@@ -21,16 +21,7 @@ selectedEmp: any = null;
 
 
   
-  // employees = [
-  //   { id: 'EMP101', name: 'John Doe' },
-  //   { id: 'EMP102', name: 'Jane Smith' },
-  //   { id: 'EMP103', name: 'Robert Wilson' },
-  //   { id: 'EMP104', name: 'Sarah Parker' }
-  // ];
-  
-  // filteredEmployees: any[] = [];
-  // selectedEmp: any = null;
-
+ 
   constructor(private fb: FormBuilder,private empService:EmployeeService) {
     this.recognitionForm = this.fb.group({
       employeeSearch: ['', Validators.required],
@@ -61,7 +52,7 @@ selectedEmp: any = null;
 
   onSearchChange(event: any) {
     const query = event.target.value.toLowerCase();
-    this.selectedEmp = null; // Reset selection if they start typing again
+    this.selectedEmp = null; 
     if (query.length > 1) {
       this.filteredEmployees = this.employees.filter(emp => 
         emp.name.toLowerCase().includes(query) || emp.id.toLowerCase().includes(query)

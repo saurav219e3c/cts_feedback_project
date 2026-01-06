@@ -7,7 +7,7 @@ import { EmployeeService, Feedback } from '../service/employee.service';
 @Component({
   selector: 'app-submit-feedback',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule], // Removed duplicate CommonModule
+  imports: [CommonModule, RouterLink, ReactiveFormsModule], 
   templateUrl: './submit-feedback.component.html',
   styleUrl: './submit-feedback.component.css'
 })
