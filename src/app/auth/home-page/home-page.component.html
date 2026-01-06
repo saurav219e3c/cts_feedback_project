@@ -1,13 +1,12 @@
 <div class="home-viewport">
   <div class="home-content">
-    
+
     <div class="welcome-text">
       <h1>Select Your Portal For Feedback</h1>
       <p>Please choose your role to continue to the login screen.</p>
     </div>
 
     <div class="cards-container">
-      
       <a class="glass-card" [routerLink]="['/auth/login-page']" [queryParams]="{ role: 'admin' }">
         <div class="icon-box">
           <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Icon">
@@ -15,7 +14,6 @@
         <h3>Admin</h3>
         <span class="tap-hint">Access Portal</span>
       </a>
-
       <a class="glass-card" [routerLink]="['/auth/login-page']" [queryParams]="{ role: 'manager' }">
         <div class="icon-box">
           <img src="https://cdn-icons-png.flaticon.com/512/912/912318.png" alt="Manager Icon">

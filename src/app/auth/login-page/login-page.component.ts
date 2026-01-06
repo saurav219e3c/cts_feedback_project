@@ -44,7 +44,6 @@ export class LoginPageComponent implements OnInit {
   }
 
 
-// src/app/auth/login-page/login-page.component.ts
 onLogin() {
   if (this.form.invalid) {
     this.form.markAllAsTouched();
