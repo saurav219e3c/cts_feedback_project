@@ -1,18 +1,17 @@
 
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { AUTH_ROUTES } from './auth/auth.routes';
+import { EMPLOYEE_ROUTES } from './employee/employee.routes';
+import { ADMIN_ROUTES } from './admin/admin.routes';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'auth' },
+  { path: '', pathMatch: 'full', redirectTo: 'auth/home-page' }, // optional; if you want app root -> home page
 
-  // Feature 1: Authentication (Home, Login, Register)
-  {
-    path: 'auth',
-    loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES),
-  },
+  { path: 'auth', children: AUTH_ROUTES },
+  { path: 'employee', children: EMPLOYEE_ROUTES },
+  { path: 'admin', children: ADMIN_ROUTES },
 
-  // Feature 2: Admin Dashboard (Merged from your friend)
-  {
-    path: 'admin',
-    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
-  }
+  { path: '**', redirectTo: 'auth/home-page' }, // fallback to home; optional
 ];
+

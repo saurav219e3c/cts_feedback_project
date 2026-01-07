@@ -1,10 +1,13 @@
+
+// src/app/auth/login-page/login-page.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
 import { LoginService } from '../service/login.service';
-import { ADMIN_ROUTES } from '../../admin/admin.routes';
-import { AUTH_ROUTES } from '../auth.routes';
+// ⬇️ Add AuthService to set auth state for guards
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -22,7 +25,8 @@ export class LoginPageComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private loginService: LoginService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private auth: AuthService, // ⬅️ added
   ) {
     // Initialize form
     this.form = this.fb.group({
@@ -46,36 +50,62 @@ export class LoginPageComponent implements OnInit {
     alert('Forgot password clicked.');
   }
 
+  // Submit handler
+  onLogin() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-// src/app/auth/login-page/login-page.component.ts
-onLogin() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+    // Include the role from the URL in the login check
+    const credentials = {
+      ...this.form.value,
+      role: this.role
+    };
+
+    this.loginService.login(credentials).subscribe(user => {
+      if (user) {
+        // ✅ Set auth state so guards allow access
+        // Safe fallback: if ?role is missing, use user.role or default to 'employee'
+        const r = (this.role ?? user.role ?? 'employee').toString().toLowerCase();
+        const normalizedRole =
+          r === 'admin' ? 'Admin' :
+          r === 'manager' ? 'Manager' :
+          'Employee';
+
+        this.auth.loginWithUser({
+          id: user.userId ?? user.id ?? 'unknown',
+          name: user.name ?? this.form.value.username,
+          email: user.email ?? '',
+          roles: [normalizedRole]
+        });
+
+        // ✅ Respect redirect param if guard sent us here
+        const redirect = this.route.snapshot.queryParamMap.get('redirect');
+        if (redirect) {
+          this.router.navigateByUrl(redirect);
+          return;
+        }
+
+        // ✅ Otherwise navigate based on role
+        const target =
+          normalizedRole === 'Admin'   ? '/admin'   :
+          normalizedRole === 'Manager' ? '/manager' :
+                                         '/employee';
+
+        this.router.navigate([target]);
+
+        // (Optional) If you still want to mark admin_logged or show a toast, you can do it here.
+        // this.admin_logged = normalizedRole === 'Admin';
+
+      } else {
+        alert('Invalid credentials or role. Please try again.');
+      }
+    });
   }
 
-  // Include the role from the URL in the login check
-  const credentials = { 
-    ...this.form.value, 
-    role: this.role 
-  };
-
-  this.loginService.login(credentials).subscribe(user => {
-    if (user) {
-      // alert(`Login Successful! Welcome ${user.name}`);
-      // Redirect to home or specific dashboard
-
-      // this.router.navigate(['/auth/home-page']);
-      // this.admin_logged=true;
-      this.router.navigate(['/admin']); 
-    } else {
-      alert('Invalid credentials or role. Please try again.');
-    }
-  });
-}
-
-goToRegister() {
-  // Navigate to the feature route
-  this.router.navigate(['/auth/register-page']);
-}
+  goToRegister() {
+    // Navigate to the feature route
+    this.router.navigate(['/auth/register-page']);
+  }
 }
