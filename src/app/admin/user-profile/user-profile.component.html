@@ -1,1 +1,88 @@
-<p>user-profile works!</p>
+
+<!-- Dimmed backdrop; keeps your background visible -->
+<div class="profile-backdrop" (click)="onBackdropClick()">
+  <!-- Center popup card -->
+  <section class="profile-modal" (click)="stopPropagation($event)" role="dialog" aria-modal="true" aria-label="User profile">
+    <header class="profile-header">
+      <div class="title-wrap">
+        <h2 class="title">User Profile</h2>
+        <small class="subtitle">ID: {{ user.id }}</small>
+      </div>
+      <button class="close" (click)="closed.emit()" aria-label="Close">✕</button>
+    </header>
+
+    <div class="profile-grid">
+      <!-- Details -->
+      <article class="card">
+        <h3 class="card-title">Details</h3>
+        <div class="rows">
+          <div class="row"><span class="label">Name</span><span class="value">{{ user.name }}</span></div>
+          <div class="row"><span class="label">Role</span><span class="value">{{ user.role }}</span></div>
+          <div class="row">
+            <span class="label">Status</span>
+            <span class="value pill" [class.active]="user.status === 'Active'" [class.disabled]="user.status === 'Disabled'">
+              {{ user.status || 'Active' }}
+            </span>
+          </div>
+          <div class="row"><span class="label">Email</span><span class="value">{{ user.email || '—' }}</span></div>
+          <div class="row"><span class="label">Phone</span><span class="value">{{ user.phone || '—' }}</span></div>
+        </div>
+      </article>
+
+      <!-- Properties -->
+      <article class="card">
+        <h3 class="card-title">Properties</h3>
+        <div class="rows">
+          <div class="row"><span class="label">Department</span><span class="value">{{ user.department || '—' }}</span></div>
+          <div class="row"><span class="label">Joining Date</span><span class="value">{{ user.joiningDate || '—' }}</span></div>
+          <div class="row"><span class="label">Manager</span><span class="value">{{ user.manager || '—' }}</span></div>
+          <div class="row"><span class="label">Location</span><span class="value">{{ user.location || '—' }}</span></div>
+        </div>
+      </article>
+
+      <!-- Activity -->
+      <article class="card">
+        <h3 class="card-title">Activity</h3>
+        <div class="rows">
+          <div class="row"><span class="label">Feedback</span><span class="value">{{ user.feedback }}</span></div>
+          <div class="row"><span class="label">Recognition</span><span class="value">{{ user.recognition }}</span></div>
+        </div>
+      </article>
+
+      <!-- Chart -->
+      <article class="card">
+        <h3 class="card-title">Chart</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Feedback</span>
+            <div class="bar-track">
+              <div class="bar bar-blue" [style.width.%]="feedbackPct"></div>
+            </div>
+            <span class="bar-value">{{ user.feedback }}</span>
+          </div>
+
+          <div class="bar-row">
+            <span class="bar-label">Recognition</span>
+            <div class="bar-track">
+              <div class="bar bar-orange" [style.width.%]="recognitionPct"></div>
+            </div>
+            <span class="bar-value">{{ user.recognition }}</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Actions -->
+      <article class="card">
+        <h3 class="card-title">Actions</h3>
+        <div class="actions">
+          <button class="btn primary" (click)="onEdit()">Edit User</button>
+          <button class="btn outline" (click)="onToggleStatus()">
+            {{ (user.status || 'Active') === 'Active' ? 'Disable' : 'Enable' }} User
+          </button>
+          <button class="btn danger" (click)="onResetPassword()">Reset Password</button>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
