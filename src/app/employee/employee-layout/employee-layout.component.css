@@ -1,0 +1,253 @@
+/* Navbar Styling */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+  height: 60px;
+}
+
+/* Toggle Button Styling */
+.hamburger {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.hamburger i {
+  font-size: 1.5rem; /* Makes the icon large and visible */
+  color: #333;
+}
+
+.hamburger:hover {
+  background-color: #f0f0f0;
+}
+
+/* Layout */
+.layout {
+  position: relative; /* Added */
+  /* background-image: url('https://images.unsplash.com/vector-1741240041537-8f76753744c5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YnVzaW5lc3N8ZW58MHx8MHx8fDA%3D');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; */
+  display: block;    /* Changed from flex to block */
+  height: calc(100vh - 60px);
+  width: 100%;
+}
+/* .layout::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.78);
+  z-index: 0;
+} */
+
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  position: absolute; /* Added: Removes it from the layout flow */
+  left: 0;
+  top: 0;
+  z-index: 1050;      /* Added: Higher than navbar/content */
+  background-color: white;
+  border-right: 1px solid #dee2e6;
+  transition: transform 0.3s ease; /* Use transform for better performance */
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+/* Closed state for Sidebar */
+.sidebar-closed {
+  transform: translateX(-100%); /* Slides the sidebar completely off-screen */
+  border-right: none;
+}
+
+/* Content Area */
+.content {
+  width: 100%;        /* Always stay full width */
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  /* Remove flex: 1 and transition: all */
+}
+/* Sidebar Menu Items */
+.sidebar-menu .nav-link {
+  padding: 12px 15px;
+  color: #495057;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-menu .nav-link:hover {
+  background-color: #e9ecef;
+}
+
+.sidebar-menu .nav-link.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.sidebar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3); /* Dark tint */
+  z-index: 1045; /* Sits behind sidebar (1050) but above content */
+}
+
+/* Profile Trigger Interaction */
+.profile-trigger {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.profile-trigger:hover {
+  background-color: #f8fafc;
+}
+
+.profile-trigger.active {
+  background-color: #f1f5f9;
+}
+
+/* Rounded Navbar Avatar */
+.nav-profile-avatar {
+  width: 40px;
+  height: 40px;
+  background: #0d6efd;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.profile-trigger:hover .nav-profile-avatar {
+  transform: scale(1.05);
+}
+
+/* Modern Animated Dropdown */
+.dropdown-menu-custom {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: 20px;
+  z-index: 2000;
+  
+  /* Animation initial state */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-15px) scale(0.95);
+  transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+  pointer-events: none;
+}
+
+.dropdown-menu-custom.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Dropdown Content Styles */
+.avatar-initials-large {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.icon-box {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.dropdown-item {
+  text-decoration: none;
+  color: #334155;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f5f9;
+  color: #0d6efd;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #fff1f2;
+  color: #e11d48;
+}
+
+/* Prevent layout scrolling when dropdown is huge */
+.position-relative {
+  position: relative;
+}
+
+/* The Caret (Triangle) */
+.dropdown-caret {
+  position: absolute;
+  top: -6px; /* Half of the height to sit on the edge */
+  right: 22px; /* Adjusted to point directly to the center of the circle */
+  width: 12px;
+  height: 12px;
+  background-color: #f8f9fa; /* Matches the top bg-light-subtle of the dropdown */
+  transform: rotate(45deg);
+  border-left: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  z-index: -1; /* Sits behind the main card content but above the shadow */
+}
+
+/* Updated Container to ensure the caret is visible */
+.dropdown-menu-custom {
+  position: absolute;
+  top: calc(100% + 12px); /* Increased slightly for the caret spacing */
+  right: 0;
+  width: 220px;
+  background: white;
+  border-radius: 16px;
+  z-index: 2000;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible !important; /* Crucial so caret isn't cut off */
+}
+
+.dropdown-menu-custom.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Ensure the header background doesn't hide the caret */
+.bg-light-subtle {
+  background-color: #f8f9fa !important;
+}
+
+
+
+

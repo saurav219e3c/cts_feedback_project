@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-12 text-center">
+      <h2 class="display-6 fw-bold text-dark">Received Feedback</h2>
+      <p class="text-muted mx-auto" style="max-width: 500px;">
+        Real-time feedback from your team. Keep up the great work!
+      </p>
+      <small class="text-muted">Viewing as: <strong>{{ currentUser }}</strong></small>
+    </div>
+  </div>
+
+  <div *ngIf="feedbackList.length === 0" class="text-center py-5">
+    <div class="display-1 text-muted opacity-25 mb-3"><i class="bi bi-inbox"></i></div>
+    <h4 class="text-muted">No feedback yet!</h4>
+    <p>Wait for your colleagues to send you some feedback.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let item of feedbackList">
+      <div class="modern-card">
+        
+        <div class="category-tag">{{ item.category }}</div>
+        
+        <div class="card-content">
+          <div class="d-flex align-items-center mb-4">
+            
+            <div class="avatar-wrapper">
+              <div [class]="item.isAnonymous ? 'avatar-anon' : 'avatar-main'">
+                <i *ngIf="item.isAnonymous" class="bi bi-incognito"></i>
+                
+                <span *ngIf="!item.isAnonymous">
+                  {{ getInitials(item.submittedByUserId) }}
+                </span>
+              </div>
+              <div class="status-indicator" [style.background]="item.isAnonymous ? '#94a3b8' : '#22c55e'"></div>
+            </div>
+          
+            <div class="ms-3">
+              <h6 class="mb-0 fw-bold" [class.text-muted]="item.isAnonymous">
+                {{ item.isAnonymous ? 'Anonymous Colleague' : item.submittedByUserId }}
+              </h6>
+              
+              <span class="text-overline">{{ item.submissionDate | date:'longDate' }}</span>
+            </div>
+          </div>
+
+          <div class="feedback-body">
+            <p class="text-secondary mb-0">"{{ item.comments }}"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
