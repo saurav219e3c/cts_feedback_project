@@ -21,5 +21,19 @@ export class EmployeeDashboardComponent {
   ];
 
   name:string='Tejas';
+
+  //for 
+  //name:string='';
+  // constructor(private empService: EmployeeService) {
+  //   const user = this.empService.getCurrentUser();
+  //   this.name = user ? this.getUserNameFromId(user) : 'Guest'; // Add helper or fetch from service
+  // }
+
+  // // Add helper to get name from ID (using dummy data)
+  // private getUserNameFromId(id: string): string {
+  //   const employees = this.empService.getDummyEmployees();
+  //   const emp = employees.find(e => e.id === id);
+  //   return emp ? emp.name : 'Unknown';
+  // }
   
 }

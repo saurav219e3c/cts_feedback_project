@@ -21,6 +21,7 @@ export class AuthService {
     if (token) this.hydrateUserFromToken(token);
   }
 
+
   /** Use this when backend returns a JWT */
   loginWithToken(token: string): void {
     this.tokenSvc.setToken(token);
@@ -36,7 +37,7 @@ export class AuthService {
     this.tokenSvc.clearToken();
     this._user$.next(null);
   }
-
+  
   hasRole$(role: Role): Observable<boolean> {
     return this.roles$.pipe(map(roles => roles.includes(role)));
   }

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AuthService } from "../../core/services/auth.service";
 
 
 //for the submit feedback 
@@ -34,9 +35,10 @@ export interface Recognition {
 
 export class EmployeeService{
     private storagekey='feedback_db';
+    constructor(private authService:AuthService){}
 
     // logged in user
-    private currentUserId = 'EMP102';
+    private currentUserId = 'EMP103';
 
     private recognitionKey = 'recognition_db';
 
@@ -121,10 +123,11 @@ export class EmployeeService{
     }
   ];
 
-    constructor(){}
+    
 
     //get loggedin User
     getCurrentUser(){
+      //const user = this.authService.getCurrentUser();
         return this.currentUserId;
     }
 
