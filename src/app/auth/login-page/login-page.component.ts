@@ -14,7 +14,7 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true,
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, RouterLink]
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class LoginPageComponent implements OnInit {
   role?: string;
