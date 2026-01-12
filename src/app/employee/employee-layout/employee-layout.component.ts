@@ -33,9 +33,10 @@ export class EmployeeLayoutComponent {
 
   // Closes dropdown when clicking anywhere else
   @HostListener('document:click', ['$event'])
-  closeProfile() {
+  closeProfile(event: Event) {
     this.isProfileOpen = false;
   }
+
 
   getInitials(name: string): string {
     if (!name) return '??';

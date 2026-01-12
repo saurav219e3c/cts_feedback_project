@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AuthService } from "../../core/services/auth.service";
 
 
 //for the submit feedback 
@@ -34,9 +35,10 @@ export interface Recognition {
 
 export class EmployeeService{
     private storagekey='feedback_db';
+    constructor(private authService:AuthService){}
 
     // logged in user
-    private currentUserId = 'EMP102';
+    //private currentUserId = 'this.getCurrentUserId()';
 
     private recognitionKey = 'recognition_db';
 
@@ -121,16 +123,19 @@ export class EmployeeService{
     }
   ];
 
-    constructor(){}
+    
 
     //get loggedin User
-    getCurrentUser(){
-        return this.currentUserId;
+  // Get current logged-in user ID
+    getCurrentUserId(): string | null {
+      return this.authService.getCurrentUserId();
     }
 
-    getDummyEmployees(){
-        return this.employeeData;
+      getCurrentUser(): string {
+      return this.getCurrentUserId() ?? 'unknown';
     }
+
+   
 
     //save FB
 
@@ -156,6 +161,12 @@ export class EmployeeService{
     //for receieved feedback service logic
     getMyReceivedFeedback(): Feedback[]{
 
+        //get real data from localstorage
+        const currentuserId = this.getCurrentUserId();
+        if(!currentuserId){
+          return [];
+        }
+
         const localData = localStorage.getItem(this.storagekey);
 
         const realFeedbacks: Feedback[]= localData ? JSON.parse(localData):[];
@@ -168,7 +179,7 @@ export class EmployeeService{
 
         //filter
 
-        return combineList.filter(f => f.targetUserId ==this.currentUserId);
+        return combineList.filter(f => f.targetUserId === currentuserId);
 
     }
 
@@ -182,7 +193,7 @@ export class EmployeeService{
     }
 
     // save Recogntion
-    saveRecognition(data: Recognition){
+    saveRecognition(data: Recognition):void{
       const list = this.getAllRecognitions();
 
       const newEntry = {
@@ -204,6 +215,10 @@ export class EmployeeService{
   
   getMyRecognitions(): Recognition[] {
     // Get Real Data from LocalStorage
+    const currentUserId = this.getCurrentUserId();
+    if (!currentUserId) {
+      return [];
+    }
     const localData = localStorage.getItem(this.recognitionKey);
     const realData: Recognition[] = localData ? JSON.parse(localData) : [];
 
@@ -211,8 +226,57 @@ export class EmployeeService{
     const combined = [...this.dummyRecognitions, ...realData];
 
     // Filter: Show only badges given TO the current user
-    return combined.filter(r => r.toUserId === this.currentUserId);
+    return combined.filter(r => r.toUserId === currentUserId);
   }
+   getDummyEmployees(){
+
+    //for usig local storage fetch employee data
+    const registeredUsers = this.getRegisteredEmployees();
+
+    //combine with dummy 
+    const combined = [...this.employeeData, ...registeredUsers];
+
+    //remove duplicates based on id
+    const uniqueMap = new Map();
+  combined.forEach(emp => {
+    if (!uniqueMap.has(emp.id)) {
+      uniqueMap.set(emp.id, emp);
+    }
+  });
+
+        return Array.from(uniqueMap.values());
+  }
+  // Add this new method to get registered employees from localStorage
+private getRegisteredEmployees() {
+  const STORAGE_KEY = 'feedback_project_users';
+  const data = localStorage.getItem(STORAGE_KEY);
+  
+  if (!data) return [];
+  
+   try {
+    const users = JSON.parse(data);
+    
+    // Filter for employee role (case-insensitive) and exclude the current user
+    const currentUserId = this.getCurrentUserId();
+    
+    return users
+      .filter((u: any) => {
+        const isEmployee = u.role && (u.role.toLowerCase() === 'employee' || u.role.toLowerCase() === 'manager');
+        const notSelf = u.userId !== currentUserId; // Don't show self in the list
+        return isEmployee && notSelf;
+      })
+      .map((u: any) => ({
+        id: u.userId,
+        name: u.name || u.username || 'Unknown'
+      }))
+      .filter((emp: any) => emp.id && emp.name); // Remove invalid entries
+  } catch (error) {
+    console.error('Error parsing registered employees:', error);
+    return [];
+  }
+}
+
+
 
 
 }
