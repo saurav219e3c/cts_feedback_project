@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -9,7 +10,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css'
 })
-export class EmployeeDashboardComponent {
+export class EmployeeDashboardComponent implements OnInit {
  today = new Date();
   
   // Data for the summary cards
@@ -20,20 +21,15 @@ export class EmployeeDashboardComponent {
     { label: 'Notifications', value: 3, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
   ];
 
-  name:string='Tejas';
+  name:string='Guest';
 
-  //for 
-  //name:string='';
-  // constructor(private empService: EmployeeService) {
-  //   const user = this.empService.getCurrentUser();
-  //   this.name = user ? this.getUserNameFromId(user) : 'Guest'; // Add helper or fetch from service
-  // }
+  constructor(private authService :AuthService){}
 
-  // // Add helper to get name from ID (using dummy data)
-  // private getUserNameFromId(id: string): string {
-  //   const employees = this.empService.getDummyEmployees();
-  //   const emp = employees.find(e => e.id === id);
-  //   return emp ? emp.name : 'Unknown';
-  // }
-  
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user =>{
+      if(user){
+        this.name = user.name || 'Guest';
+      }
+    });
+}
 }

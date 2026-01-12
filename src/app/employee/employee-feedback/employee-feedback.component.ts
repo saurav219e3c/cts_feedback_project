@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { EmployeeService, Feedback } from '../service/employee.service';
+import { AuthService } from '../../core/services/auth.service';
 // interface Feedback {
 //   id: string;
 //   employeeName: string;
@@ -32,8 +33,11 @@ export class EmployeeFeedbackComponent implements OnInit {
   feedbackList: Feedback[]=[];
 
   currentUser: string ='';
+ 
 
-  constructor(private empService:EmployeeService){}
+  constructor(private empService:EmployeeService
+    
+  ){}
 
 
 
@@ -41,6 +45,11 @@ export class EmployeeFeedbackComponent implements OnInit {
 
   ngOnInit(): void { 
     this.currentUser=this.empService.getCurrentUser();
+    // this.authService.user$.subscribe(user =>{
+    //   if(user){
+    //     this.currentUserName = user.name;
+    //   }
+    // });
 
     this.feedbackList = this.empService.getMyReceivedFeedback();
 
