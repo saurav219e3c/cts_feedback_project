@@ -40,7 +40,7 @@
                   <span class="input-group-text bg-light"><i class="bi bi-tag"></i></span>
                   <select formControlName="category" class="form-select">
                     <option value="" disabled>Select...</option>
-                    <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+                    <option *ngFor="let cat of categories" [value]="cat.name">{{cat.name}}</option>
                   </select>
                 </div>
               </div>

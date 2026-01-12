@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,10 +13,11 @@ export interface Category {
 @Component({
   standalone: true,
   selector: 'app-category-management',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule ],
   templateUrl: './category-management.component.html',
   styleUrls: ['./category-management.component.css']
 })
+@Injectable({ providedIn: 'root' })
 export class CategoryManagementComponent {
   // Corporate feedback categories (sample)
   categories: Category[] = [
