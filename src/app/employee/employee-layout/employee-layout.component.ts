@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-employee-layout',
@@ -13,9 +15,27 @@ export class EmployeeLayoutComponent {
   isProfileOpen = false;
 
   // Dummy Data
-  userName: string = 'Tejas Thorat';
-  userEmail: string = 'tejas.k@company.com';
-  employeeId: string = '2463723';
+  // userName: string = 'Tejas Thorat';
+  // userEmail: string = 'tejas.k@company.com';
+  // employeeId: string = '2463723';
+
+  //user data from auth service
+  userName:string='User';
+  userEmail: string='';
+  employeeId:string='';
+  currentUser: User | null=null;
+
+  constructor(private authService: AuthService,private router:Router){}
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user =>{
+      if(user){
+         this.currentUser = user;
+        this.userName = user.name || 'User';
+        this.userEmail = user.email || '';
+        this.employeeId = user.id || '';
+      }
+    });
+  }
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
@@ -48,7 +68,10 @@ export class EmployeeLayoutComponent {
   }
 
   logout(): void {
-    alert('Logging out...');
+    this.authService.logout();
+    this.router.navigate(['/auth/home-page']);
+
+    
   }
 
 }

@@ -21,9 +21,9 @@ export class SubmitFeedbackComponent implements OnInit {
   constructor(private fb: FormBuilder, private empService: EmployeeService) {}
 
   ngOnInit(): void {
-   
-    // 1. Get the dummy data from your service
     this.employees = this.empService.getDummyEmployees();
+   
+    
 
     this.feedbackForm = this.fb.group({
       searchEmployee: ['', Validators.required],
