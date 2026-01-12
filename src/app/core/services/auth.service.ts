@@ -21,6 +21,15 @@ export class AuthService {
     if (token) this.hydrateUserFromToken(token);
   }
 
+  //get current user value
+getCurrentUserId(): string | null {
+  return this._user$.getValue()?.id ?? null;
+}
+  // For reactive components, expose as observable
+getCurrentUserId$(): Observable<string | null> {
+  return this.user$.pipe(map(u => u?.id ?? null));
+}
+
 
   /** Use this when backend returns a JWT */
   loginWithToken(token: string): void {
