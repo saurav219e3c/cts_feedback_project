@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmployeeService, Feedback } from '../service/employee.service';
+import { CategoryManagementComponent } from '../../admin/category-management/category-management.component';
 
 @Component({
   selector: 'app-submit-feedback',
@@ -12,9 +13,10 @@ import { EmployeeService, Feedback } from '../service/employee.service';
   styleUrl: './submit-feedback.component.css'
 })
 export class SubmitFeedbackComponent implements OnInit {
+  private catagory_inj = inject(CategoryManagementComponent);
   feedbackForm!: FormGroup;
   employees: any[] = []; 
-  categories = ['Team Lead', 'Team Member', 'yyyy', 'Career Growth', 'Other'];
+  categories = this.catagory_inj.categories;
 
   constructor(private fb: FormBuilder, private empService: EmployeeService) {}
 
