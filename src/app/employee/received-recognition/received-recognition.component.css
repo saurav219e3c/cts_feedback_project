@@ -1,3 +1,12 @@
+/* Color Palette & Variables */
+:host {
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-subtle: #f8fafc;
+}
+
 /* Layout Elements */
 .header-line {
   height: 4px;
@@ -13,9 +22,13 @@
   border-radius: 24px;
   border: 2px solid #f1f3f5; /* Initial subtle border */
   transition: all 0.4s cubic-bezier(.25,.8,.25,1);
-  overflow: visible; /* Required for the points circle to pop out */
+  
+  /* IMPORTANT: This must be 'visible' so the Points Circle can pop out */
+  overflow: visible; 
+  
   display: flex;
   flex-direction: column;
+  height: 100%; /* Ensures all cards in a row match height */
 }
 
 .recognition-card:hover {
@@ -71,10 +84,36 @@
   gap: 6px;
 }
 
+/* --- FIXED QUOTE CONTAINER START --- */
 .quote-container {
   position: relative;
+  
+  /* Controls Height & Scroll */
   min-height: 90px;
+  max-height: 140px;      /* Stops card from getting too tall */
+  overflow-y: auto;       /* Adds scrollbar if text is long */
+  
+  /* Text Wrapping Logic */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  
+  margin-bottom: 15px;    /* Space before footer */
+  padding-right: 5px;     /* Space for scrollbar */
 }
+
+/* Scrollbar Styling for Quote */
+.quote-container::-webkit-scrollbar {
+  width: 4px;
+}
+.quote-container::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+.quote-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* --- FIXED QUOTE CONTAINER END --- */
 
 .quote-text {
   font-size: 1.05rem;
@@ -84,9 +123,10 @@
   margin-top: -10px;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
-/* Avatar Styling */
+/* Footer & Avatar Styling */
 .user-avatar {
   width: 48px;
   height: 48px;

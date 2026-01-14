@@ -34,7 +34,9 @@ export interface Recognition {
 })
 
 export class EmployeeService{
+  
     private storagekey='feedback_db';
+    
     constructor(private authService:AuthService){}
 
     // logged in user
@@ -135,6 +137,16 @@ export class EmployeeService{
       return this.getCurrentUserId() ?? 'unknown';
     }
 
+    getEmployeeName(submittedByUserId: string): string {
+    const allEmployees = this.getDummyEmployees();
+
+    const founduser = allEmployees.find(emp => emp.id === submittedByUserId);
+
+    return founduser ? founduser.name :submittedByUserId;
+  }
+
+    
+
    
 
     //save FB
@@ -183,15 +195,7 @@ export class EmployeeService{
 
     }
 
-    //to get raw storage
-
-    private getAllFeedbacks():Feedback[]{
-
-        const data = localStorage.getItem(this.storagekey);
-        return data ? JSON.parse(data):[];
-
-    }
-
+    
     // save Recogntion
     saveRecognition(data: Recognition):void{
       const list = this.getAllRecognitions();

@@ -47,6 +47,7 @@
   position: relative;
 }
 
+/* Style for Real Users (Blue) */
 .avatar-main {
   width: 52px;
   height: 52px;
@@ -58,6 +59,19 @@
   border-radius: 16px;
   font-weight: 800;
   font-size: 1.1rem;
+}
+
+/* Style for Anonymous Users (Grey) - Added this because your HTML uses it */
+.avatar-anon {
+  width: 52px;
+  height: 52px;
+  background: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-size: 1.2rem;
 }
 
 .status-indicator {
@@ -80,12 +94,24 @@
   font-weight: 600;
 }
 
+/* Comment Box Styling */
 .feedback-body {
   background: var(--bg-subtle);
-  padding: 16px;
+  padding: 20px;
   border-radius: 12px;
-  flex-grow: 1;
-  margin-top: 10px;
+  margin-bottom: 15px; /* Spacing from the bottom divider */
+  
+  /* Text Wrapping & Scrolling fixes */
+  word-wrap: break-word;     
+  overflow-wrap: break-word; 
+  word-break: break-word;    
+  max-height: 150px;         
+  overflow-y: auto;          
+}
+
+.feedback-body i {
+  display: block;
+  margin-bottom: 5px;
 }
 
 .feedback-body p {
@@ -93,20 +119,14 @@
   line-height: 1.6;
 }
 
-/* Action Button */
-.btn-action {
-  margin-top: 20px;
-  width: 100%;
-  border: none;
-  background: transparent;
-  color: #6366f1;
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 10px;
-  border-radius: 10px;
-  transition: background 0.2s;
+/* Scrollbar Customization */
+.feedback-body::-webkit-scrollbar {
+  width: 6px;
 }
-
-.btn-action:hover {
-  background: #f5f3ff;
+.feedback-body::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+.feedback-body::-webkit-scrollbar-track {
+  background: transparent;
 }
