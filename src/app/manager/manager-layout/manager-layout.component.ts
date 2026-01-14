@@ -1,7 +1,9 @@
-import { Component, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter, Subscription } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service'; // Adjust path
+import { User } from '../../core/models/user.model'; // Adjust path
 
 @Component({
   selector: 'app-manager-layout',
@@ -15,28 +17,50 @@ import { filter } from 'rxjs/operators';
   templateUrl: './manager-layout.component.html',
   styleUrls: ['./manager-layout.component.css']
 })
-export class ManagerLayoutComponent {
+export class ManagerLayoutComponent implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private sub = new Subscription();
+
   isSidebarOpen = false;
-  isProfileOpen = false; // Controls the profile popup
-  notificationCount = 2; // Dynamic notification number
+  isProfileOpen = false;
+  notificationCount = 2;
+  currentUser: User | null = null;
 
-  manager = {
-    name: 'Roshan Khorate',
-    email: 'roshan.khorate@example.com'
-  };
-
-  constructor(private router: Router) {
-    this.router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-      .subscribe(() => {
-        if (!this.isDesktop()) {
-          this.isSidebarOpen = false;
-        }
-        this.isProfileOpen = false; // Close profile popup on navigation
-      });
+  constructor() {
+    // Auto-close sidebar/popup on navigation
+    this.sub.add(
+      this.router.events
+        .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+        .subscribe(() => {
+          if (!this.isDesktop()) this.isSidebarOpen = false;
+          this.isProfileOpen = false;
+        })
+    );
   }
 
-  // --- Logic for Sidebar ---
+  ngOnInit(): void {
+    // Reactively update user details (Name, Email, ID) from the Service/Token
+    this.sub.add(
+      this.authService.user$.subscribe(user => {
+        this.currentUser = user;
+        // Optional: Redirect to login if user becomes null (token expires/logout)
+        if (!user) {
+          this.router.navigate(['/login']);
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
+  onLogout(): void {
+    this.authService.logout(); // Clears localStorage via TokenService
+    this.router.navigate(['/login']);
+  }
+
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
@@ -45,20 +69,17 @@ export class ManagerLayoutComponent {
     this.isSidebarOpen = false;
   }
 
-  // --- Logic for Profile Popup ---
   toggleProfile(): void {
     this.isProfileOpen = !this.isProfileOpen;
   }
 
-  getInitials(name: string): string {
-    if (!name) return '';
+  getInitials(name: string | undefined): string {
+    if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   }
 
-  // --- Listeners ---
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
-    // If clicking outside the profile trigger, close the popup
     if (!event.target.closest('.profile-container')) {
       this.isProfileOpen = false;
     }
