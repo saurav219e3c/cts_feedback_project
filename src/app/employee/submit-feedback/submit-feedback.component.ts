@@ -8,7 +8,7 @@ import { CategoryManagementComponent } from '../../admin/category-management/cat
 @Component({
   selector: 'app-submit-feedback',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule], 
+  imports: [CommonModule,ReactiveFormsModule], 
   templateUrl: './submit-feedback.component.html',
   styleUrl: './submit-feedback.component.css'
 })

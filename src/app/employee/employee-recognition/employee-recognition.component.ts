@@ -7,7 +7,7 @@ import { EmployeeService, Recognition } from '../service/employee.service';
 @Component({
   selector: 'app-employee-recognition',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './employee-recognition.component.html',
   styleUrl: './employee-recognition.component.css'
 })

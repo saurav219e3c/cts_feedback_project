@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+  import { CommonModule } from '@angular/common';
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { EmployeeService, Feedback } from '../service/employee.service';
 
@@ -15,8 +15,6 @@ import { EmployeeService, Feedback } from '../service/employee.service';
 export class EmployeeFeedbackComponent implements OnInit {
 
   feedbackList: Feedback[]=[];
-
-
 
   currentUser: string ='';
  
@@ -49,7 +47,7 @@ export class EmployeeFeedbackComponent implements OnInit {
     this.feedbackList = this.empService.getMyReceivedFeedback();
 
     //load data into signal
-    const data = this.empService.getMyReceivedFeedback();
+    const data = this.empService.getMyReceivedFeedback();  //backend se data lana hai 
     this.rawFeedback.set(data);
 
   }
