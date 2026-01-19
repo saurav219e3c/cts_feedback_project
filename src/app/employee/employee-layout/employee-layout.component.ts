@@ -22,8 +22,9 @@ export class EmployeeLayoutComponent implements OnInit {
   employeeId:string='';
   currentUser: User | null=null;
 
-  constructor(private authService: AuthService,private router:Router){}
+  constructor(private authService: AuthService,private router:Router){} // Inject AuthService and Router
   ngOnInit(): void {
+
     this.authService.user$.subscribe(user =>{
       if(user){
         this.currentUser = user;
@@ -63,7 +64,9 @@ export class EmployeeLayoutComponent implements OnInit {
     }
     return name.slice(0, 2).toUpperCase();
   }
+ 
 
+  //logout method
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/home-page']);

@@ -2,6 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { EmployeeService } from '../service/employee.service';
+export interface DashboardStat {
+  label: string;
+  value: number;
+  trend: number;
+  icon: string;
+  bgClass: string;
+}
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -11,6 +19,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './employee-dashboard.component.css'
 })
 export class EmployeeDashboardComponent implements OnInit {
+
  today = new Date();
   
   // Data for the summary cards
@@ -21,9 +30,11 @@ export class EmployeeDashboardComponent implements OnInit {
     { label: 'Notifications', value: 3, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
   ];
 
-  name:string='Guest';
+  name:string='Guest'; // Default name
 
-  constructor(private authService :AuthService){}
+  constructor(private authService :AuthService,
+              private employeeService:EmployeeService
+  ){}
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user =>{
@@ -31,5 +42,10 @@ export class EmployeeDashboardComponent implements OnInit {
         this.name = user.name || 'Guest';
       }
     });
+
+    this.employeeService.getDasboardStats().subscribe(data => {
+      this.stats = data;
+    });
+
 }
 }
