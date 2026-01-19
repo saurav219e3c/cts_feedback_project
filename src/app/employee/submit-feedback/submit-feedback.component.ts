@@ -8,7 +8,7 @@ import { CategoryManagementComponent } from '../../admin/category-management/cat
 @Component({
   selector: 'app-submit-feedback',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule], 
+  imports: [CommonModule,ReactiveFormsModule], 
   templateUrl: './submit-feedback.component.html',
   styleUrl: './submit-feedback.component.css'
 })
@@ -36,33 +36,26 @@ export class SubmitFeedbackComponent implements OnInit {
     });
 
     // 3. AUTO-FILL LOGIC: Listen to search box changes
-    this.feedbackForm.get('searchEmployee')?.valueChanges.subscribe(name => {
+this.feedbackForm.get('searchEmployee')?.valueChanges.subscribe(name => {
       const selected = this.employees.find(e => e.name === name);
-      if (selected && !this.feedbackForm.get('isAnonymous')?.value) {
+      if (selected) {
         this.feedbackForm.get('employeeId')?.setValue(selected.id);
       }
     });
 
-    // 4. ANONYMOUS LOGIC
-    this.feedbackForm.get('isAnonymous')?.valueChanges.subscribe(isAnon => {
-      const idControl = this.feedbackForm.get('employeeId');
-      if (isAnon) {
-        idControl?.setValue('ANONYMOUS');
-      } else {
-        idControl?.setValue(''); // Reset so they pick a name again
-      }
-    });
   }
 
   onSubmit(): void {
      if(this.feedbackForm.valid){
       const formValue = this.feedbackForm.getRawValue();
 
+      const isAnonymous = formValue.isAnonymous;
+
       const finalData: Feedback ={
         feedbackId: '', // Service will fill this
         
         // ADDED: Who is sending this? (Get from Service)
-        submittedByUserId: this.empService.getCurrentUser(), 
+        submittedByUserId: isAnonymous ? 'Anonymous' :this.empService.getCurrentUser(), 
         
         // ADDED: Who is this for? (Map it from the form's 'employeeId')
         targetUserId: formValue.employeeId, 
@@ -71,7 +64,7 @@ export class SubmitFeedbackComponent implements OnInit {
         searchEmployee: formValue.searchEmployee,
         category: formValue.category,
         comments: formValue.comments,
-        isAnonymous: formValue.isAnonymous,
+        isAnonymous:isAnonymous,
         submissionDate: formValue.submissionDate
 
 

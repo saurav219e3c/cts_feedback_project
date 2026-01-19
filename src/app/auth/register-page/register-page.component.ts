@@ -10,7 +10,7 @@ type Role = 'manager' | 'employee';
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.css'],
 })

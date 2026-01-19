@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms'; // Required for [(ngModel)]
   selector: 'app-manager-profile',
   standalone: true,
   // Added CommonModule for *ngIf and FormsModule for input binding
-  imports: [RouterLink, RouterLinkActive, CommonModule, FormsModule], 
+  imports: [RouterLink, CommonModule, FormsModule], 
   templateUrl: './manager-profile.component.html',
   styleUrl: './manager-profile.component.css'
 })
