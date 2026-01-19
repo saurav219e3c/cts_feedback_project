@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AuthService } from "../../core/services/auth.service";
+import { Observable, of } from "rxjs";
+import { DashboardStat } from "../employee-dashboard/employee-dashboard.component";
 
 
 //for the submit feedback 
@@ -35,14 +37,13 @@ export interface Recognition {
 
 export class EmployeeService {
 
+
+  // local db
   private storagekey = 'feedback_db';
-
-  constructor(private authService: AuthService) { }
-
-  // logged in user
-  //private currentUserId = 'this.getCurrentUserId()';
-
   private recognitionKey = 'recognition_db';
+
+  //constructur injection 
+  constructor(private authService: AuthService) { }
 
   // Dummy Employees for your search bar
   private employeeData = [
@@ -137,6 +138,8 @@ export class EmployeeService {
     return this.getCurrentUserId() ?? 'unknown';
   }
 
+  //get employee name by id 
+
   getEmployeeName(submittedByUserId: string): string {
     const allEmployees = this.getDummyEmployees();
 
@@ -150,7 +153,6 @@ export class EmployeeService {
 
 
   //save FB
-
   saveFeedback(data: Feedback) {
     const currentData = this.getFeedbackHistory();
 
@@ -162,7 +164,7 @@ export class EmployeeService {
   }
 
 
-
+ // get all feedback 
   getFeedbackHistory(): Feedback[] {
 
     const data = localStorage.getItem(this.storagekey);
@@ -170,7 +172,7 @@ export class EmployeeService {
     return data ? JSON.parse(data) : [];
   }
 
-  //for receieved feedback service logic
+  //for receieved feedback according to logged in user
   getMyReceivedFeedback(): Feedback[] {
 
     //get real data from localstorage
@@ -187,10 +189,7 @@ export class EmployeeService {
 
     const combineList = [...this.dummyFeedbacks, ...realFeedbacks];
 
-    //const allFeedback: Feedback[]= data ? JSON.parse(data):[];
-
     //filter
-
     return combineList.filter(f => f.targetUserId === currentuserId);
 
   }
@@ -209,13 +208,13 @@ export class EmployeeService {
     list.push(newEntry);
     localStorage.setItem(this.recognitionKey, JSON.stringify(list));
   }
-
+   //get all recogntion
   getAllRecognitions(): Recognition[] {
     const data = localStorage.getItem(this.recognitionKey);
     return data ? JSON.parse(data) : [];
   }
 
-  //get reconition 
+  //get reconition by logged in user
 
   getMyRecognitions(): Recognition[] {
     // Get Real Data from LocalStorage
@@ -232,6 +231,8 @@ export class EmployeeService {
     // Filter: Show only badges given TO the current user
     return combined.filter(r => r.toUserId === currentUserId);
   }
+
+  // get employee list Dummy + locaal storage
   getDummyEmployees() {
 
     //for usig local storage fetch employee data
@@ -252,7 +253,9 @@ export class EmployeeService {
   }
   // Add this new method to get registered employees from localStorage
   private getRegisteredEmployees() {
+
     const STORAGE_KEY = 'feedback_project_users';
+
     const data = localStorage.getItem(STORAGE_KEY);
 
     if (!data) return [];
@@ -278,6 +281,78 @@ export class EmployeeService {
       console.error('Error parsing registered employees:', error);
       return [];
     }
+  }
+
+  // for dashboard 
+
+  private getAllFeedbackCombined(): Feedback[] {
+    const localData = localStorage.getItem(this.storagekey);
+    const realFeedbacks: Feedback[] = localData ? JSON.parse(localData) : [];
+    return [...this.dummyFeedbacks, ...realFeedbacks];
+  }
+  private getAllRecognitionCombined(): Recognition[] {
+    const localData = localStorage.getItem(this.recognitionKey);
+    const realData: Recognition[] = localData ? JSON.parse(localData) : [];
+    return [...this.dummyRecognitions, ...realData];
+  }
+  getMySentFeedback(): Feedback[] {
+    const currentId = this.getCurrentUserId();
+    if (!currentId) return [];
+    
+    // Filter logic: Check if 'submittedByUserId' is ME
+    return this.getAllFeedbackCombined().filter(f => f.submittedByUserId === currentId);
+  }
+  getMySentRecognition(): Recognition[] {
+    const currentId = this.getCurrentUserId();
+    if (!currentId) return [];
+
+    // Filter logic: Check if 'fromUserId' is ME
+    return this.getAllRecognitionCombined().filter(r => r.fromUserId === currentId);
+  }
+
+  //dashboarad logic 
+  getDasboardStats(): Observable<DashboardStat[]> {
+    // Get the Real Counts using the methods above
+    const sentFbCount = this.getMySentFeedback().length;
+    const receivedFbCount = this.getMyReceivedFeedback().length;
+    
+    const sentRecCount = this.getMySentRecognition().length;
+    const receivedRecList = this.getMyRecognitions(); // Uses your existing method
+    
+    // Calculate total points received (optional, but looks good on dashboard)
+    const totalPointsReceived = receivedRecList.reduce((sum, item) => sum + (item.points || 0), 0);
+
+   // Return the array that matches your HTML structure exactly
+    return of([
+      { 
+        label: 'Feedback Given', 
+        value: sentFbCount, 
+        trend: 12, 
+        icon: 'bi-pencil-square', 
+        bgClass: 'bg-primary-soft' 
+      },
+      { 
+        label: 'Feedback Received', 
+        value: receivedFbCount, 
+        trend: 5, 
+        icon: 'bi-chat-left-dots', 
+        bgClass: 'bg-warning-soft' 
+      },
+      { 
+        label: 'Recognition Given', 
+        value: sentRecCount, 
+        trend: 8, 
+        icon: 'bi-star', 
+        bgClass: 'bg-info-soft' 
+      },
+      { 
+        label: 'Points Earned', 
+        value: totalPointsReceived, 
+        trend: 20, 
+        icon: 'bi-award', 
+        bgClass: 'bg-success-soft' 
+      }
+    ]);
   }
 
 

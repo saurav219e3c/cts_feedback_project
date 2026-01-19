@@ -13,14 +13,18 @@ import { CategoryManagementComponent } from '../../admin/category-management/cat
   styleUrl: './submit-feedback.component.css'
 })
 export class SubmitFeedbackComponent implements OnInit {
-  private catagory_inj = inject(CategoryManagementComponent);
+  private catagory_inj = inject(CategoryManagementComponent); //
+  
   feedbackForm!: FormGroup;
+
   employees: any[] = []; 
+
   categories = this.catagory_inj.categories;
 
   constructor(private fb: FormBuilder, private empService: EmployeeService) {}
 
   ngOnInit(): void {
+    
     this.employees = this.empService.getDummyEmployees();
    
     
