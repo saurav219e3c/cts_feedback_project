@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 
 interface Feedback {
   id: number;
+  employeeId: string;
   employeeName: string;
   category: string;
   date: string;
@@ -37,11 +38,11 @@ export class ManagerFeedbackComponent implements OnInit {
   }
 
   refreshData(): void {
-    // UPDATED: Fetching real data from localStorage via ManagerService
     const rawData = this.managerService.getAllFeedback();
     
     this.feedbackList = rawData.map((f, index) => ({
       id: f.id || f.feedbackId || index, 
+      employeeId: f.targetUserId || 'N/A', 
       employeeName: f.isAnonymous ? 'Anonymous' : (f.searchEmployee || 'Unknown'),
       category: f.category,
       date: f.submissionDate,
@@ -56,43 +57,43 @@ export class ManagerFeedbackComponent implements OnInit {
     const q = this.searchText.trim().toLowerCase();
     this.filteredList = this.feedbackList.filter(f =>
       f.employeeName.toLowerCase().includes(q) || 
+      f.employeeId.toLowerCase().includes(q) || 
       f.category.toLowerCase().includes(q)
     );
   }
 
   updateStatus(id: number, newStatus: 'Acknowledged' | 'Resolved'): void {
-    // UPDATED: Save change to LocalStorage
     this.managerService.updateFeedbackStatus(id, newStatus);
-    // Refresh the UI list
     this.refreshData();
   }
 
   downloadSinglePDF(feedback: Feedback) {
     const doc = new jsPDF();
-    doc.text(`Feedback: ${feedback.employeeName}`, 14, 20);
+    doc.text(`Feedback Report - ${feedback.employeeId}`, 14, 20);
     autoTable(doc, {
       startY: 30,
       head: [['Field', 'Details']],
       body: [
-        ['Employee', feedback.employeeName],
+        ['Employee ID', feedback.employeeId],
+        ['Employee Name', feedback.employeeName],
         ['Category', feedback.category],
         ['Date', feedback.date],
         ['Status', feedback.status],
         ['Details', feedback.details]
       ],
     });
-    doc.save(`${feedback.employeeName}_feedback.pdf`);
+    doc.save(`Feedback_${feedback.employeeId}.pdf`);
   }
 
   downloadFullReport() {
     const doc = new jsPDF();
-    doc.text('Team Feedback Report', 14, 20);
+    doc.text('Team Feedback Summary Report', 14, 20);
     autoTable(doc, {
       startY: 30,
-      head: [['#', 'Employee', 'Category', 'Date', 'Status']],
-      body: this.filteredList.map((f, i) => [i + 1, f.employeeName, f.category, f.date, f.status]),
+      head: [['#', 'ID', 'Employee', 'Category', 'Date', 'Status']],
+      body: this.filteredList.map((f, i) => [i + 1, f.employeeId, f.employeeName, f.category, f.date, f.status]),
     });
-    doc.save('full_report.pdf');
+    doc.save('Team_Feedback_Report.pdf');
   }
 
   viewFeedback(id: number): void {

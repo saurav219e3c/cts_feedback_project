@@ -4,20 +4,27 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ManagerService {
-  private storageKey = 'feedback_db';
+  private feedbackKey = 'feedback_db';
+  private recognitionKey = 'recognition_db';
 
+  // --- Feedback Logic ---
   getAllFeedback(): any[] {
-    const data = localStorage.getItem(this.storageKey);
+    const data = localStorage.getItem(this.feedbackKey);
+    return data ? JSON.parse(data) : [];
+  }
+
+  // --- Recognition Logic (NEW) ---
+  getAllRecognitions(): any[] {
+    const data = localStorage.getItem(this.recognitionKey);
     return data ? JSON.parse(data) : [];
   }
 
   updateFeedbackStatus(id: any, newStatus: string): void {
     const feedbacks = this.getAllFeedback();
     const index = feedbacks.findIndex(f => f.id === id || f.feedbackId === id);
-
     if (index !== -1) {
       feedbacks[index].status = newStatus;
-      localStorage.setItem(this.storageKey, JSON.stringify(feedbacks));
+      localStorage.setItem(this.feedbackKey, JSON.stringify(feedbacks));
     }
   }
 }
