@@ -1,105 +1,115 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { EmployeeService, Recognition } from '../service/employee.service';
 
 @Component({
   selector: 'app-employee-recognition',
-  imports: [RouterLink,CommonModule,ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './employee-recognition.component.html',
   styleUrl: './employee-recognition.component.css'
 })
 export class EmployeeRecognitionComponent implements OnInit {
-recognitionForm: FormGroup;
-
-employees:any[]=[]; // from service
-
-filteredEmployees:any[]=[];
-
-selectedEmp: any = null;
-
-
   
- 
-  constructor(private fb: FormBuilder,private empService:EmployeeService) {
+  // 1. Modern Injection (Cleaner than constructor)
+  private fb = inject(FormBuilder);
+  
+  private empService = inject(EmployeeService);
+
+  recognitionForm: FormGroup;
+  employees: any[] = []; 
+
+  // 2. SIGNALS for UI State (The Angular 19 Way)
+  // These replace the standard arrays for the UI logic
+  filteredEmployees = signal<any[]>([]); 
+  selectedEmp = signal<any>(null);
+
+  constructor() {
     this.recognitionForm = this.fb.group({
       employeeSearch: ['', Validators.required],
       employeeId: [{ value: '', disabled: true }], 
       badgeType: ['', Validators.required],
-      // Defaulted points to 5 for the range slider feel
       points: [5, [Validators.required, Validators.min(1), Validators.max(10)]],
       comment: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
+
   ngOnInit(): void {
-    //load employee
-
     this.employees = this.empService.getDummyEmployees();
-
   }
 
+  // Getter for easy access in HTML
   get f() { return this.recognitionForm.controls; }
 
-  // Dynamic color helper for the UI
+  // Dynamic color helper
   getBadgeTheme() {
     const badge = this.recognitionForm.get('badgeType')?.value;
     if (badge === 'Leader') return 'border-danger text-danger';
     if (badge === 'Team Player') return 'border-success text-success';
     if (badge === 'Problem Solver') return 'border-info text-info';
+    if (badge === 'Innovator') return 'border-warning text-warning';
     return 'border-primary';
   }
 
   onSearchChange(event: any) {
     const query = event.target.value.toLowerCase();
-    this.selectedEmp = null; 
+    
+    // Reset selected signal because user started typing again
+    this.selectedEmp.set(null); 
+
     if (query.length > 1) {
-      this.filteredEmployees = this.employees.filter(emp => 
+      const results = this.employees.filter(emp => 
         emp.name.toLowerCase().includes(query) || emp.id.toLowerCase().includes(query)
       );
+      // Update Signal
+      this.filteredEmployees.set(results);
     } else {
-      this.filteredEmployees = [];
+      this.filteredEmployees.set([]);
     }
   }
 
   selectEmployee(emp: any) {
-    this.selectedEmp = emp;
+    // Set the signal
+    this.selectedEmp.set(emp);
+    
+    // Patch the Reactive Form
     this.recognitionForm.patchValue({
       employeeSearch: emp.name,
       employeeId: emp.id
     });
-    this.filteredEmployees = [];
+    
+    // Clear the dropdown list
+    this.filteredEmployees.set([]);
   }
 
   onSubmit() {
-   if (this.recognitionForm.valid && this.selectedEmp) {
+    // Check signal value using parentheses: this.selectedEmp()
+    if (this.recognitionForm.valid && this.selectedEmp()) {
       const rawForm = this.recognitionForm.getRawValue();
 
-      // 5. MAP FORM DATA TO YOUR ENTITIES
       const recognitionData: Recognition = {
-        fromUserId: this.empService.getCurrentUser(), // Get logged-in user
-        toUserId: rawForm.employeeId,                 // Mapped from form
-        BadgeType: rawForm.badgeType,                 // Mapped from form
+        fromUserId: this.empService.getCurrentUser(), 
+        toUserId: rawForm.employeeId,
+        BadgeType: rawForm.badgeType,
         points: rawForm.points,
         comment: rawForm.comment,
         date: new Date().toISOString().substring(0, 10)
       };
 
-      // 6. Save to Service
       this.empService.saveRecognition(recognitionData);
 
       console.log('Saved to DB:', recognitionData);
-      alert(`🎉 Recognition Sent to ${this.selectedEmp.name}!`);
+      alert(`🎉 Recognition Sent to ${this.selectedEmp().name}!`);
       
       this.recognitionForm.reset({
         points: 5,
         badgeType: '',
         employeeSearch: ''
       });
-      this.selectedEmp = null;
+      
+      this.selectedEmp.set(null);
     }
   }
-
-
-
 }

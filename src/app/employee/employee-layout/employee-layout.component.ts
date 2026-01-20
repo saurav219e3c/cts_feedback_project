@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
@@ -10,14 +10,11 @@ import { User } from '../../core/models/user.model';
   templateUrl: './employee-layout.component.html',
   styleUrl: './employee-layout.component.css'
 })
-export class EmployeeLayoutComponent {
+export class EmployeeLayoutComponent implements OnInit {
   isSidebarOpen = false;
   isProfileOpen = false;
 
-  // Dummy Data
-  // userName: string = 'Tejas Thorat';
-  // userEmail: string = 'tejas.k@company.com';
-  // employeeId: string = '2463723';
+ 
 
   //user data from auth service
   userName:string='User';
@@ -25,11 +22,12 @@ export class EmployeeLayoutComponent {
   employeeId:string='';
   currentUser: User | null=null;
 
-  constructor(private authService: AuthService,private router:Router){}
+  constructor(private authService: AuthService,private router:Router){} // Inject AuthService and Router
   ngOnInit(): void {
+
     this.authService.user$.subscribe(user =>{
       if(user){
-         this.currentUser = user;
+        this.currentUser = user;
         this.userName = user.name || 'User';
         this.userEmail = user.email || '';
         this.employeeId = user.id || '';
@@ -66,12 +64,13 @@ export class EmployeeLayoutComponent {
     }
     return name.slice(0, 2).toUpperCase();
   }
+ 
 
+  //logout method
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/home-page']);
-
-    
+  
   }
 
 }
