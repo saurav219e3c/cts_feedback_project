@@ -7,7 +7,7 @@ export class ManagerService {
   private feedbackKey = 'feedback_db';
   private recognitionKey = 'recognition_db';
 
-  // --- Feedback Logic ---
+  // --- Feedback Logic ---   
   getAllFeedback(): any[] {
     const data = localStorage.getItem(this.feedbackKey);
     return data ? JSON.parse(data) : [];
