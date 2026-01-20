@@ -7,12 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-manager-profile',
   standalone: true,
-<<<<<<< HEAD
   imports: [RouterLink, RouterLinkActive, CommonModule, FormsModule],
-=======
-  // Added CommonModule for *ngIf and FormsModule for input binding
-  imports: [RouterLink, CommonModule, FormsModule], 
->>>>>>> 25a47f5039848f4a0f8c754edbdae983a2c3d345
   templateUrl: './manager-profile.component.html',
   styleUrl: './manager-profile.component.css'
 })
