@@ -37,7 +37,7 @@ export class EmployeeRecognitionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.employees = this.empService.getDummyEmployees();
+    this.employees = this.empService.getAllEmployees();
   }
 
   // Getter for easy access in HTML

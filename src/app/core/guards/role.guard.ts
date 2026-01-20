@@ -6,6 +6,7 @@ import { Role } from '../models/role.model';
 import { map } from 'rxjs';
 
 export const roleGuard: CanActivateFn = (route, state) => {
+
   const auth = inject(AuthService);
   const router = inject(Router);
 

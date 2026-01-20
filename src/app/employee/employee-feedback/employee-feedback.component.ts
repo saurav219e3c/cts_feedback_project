@@ -26,6 +26,7 @@ export class EmployeeFeedbackComponent implements OnInit {
   rawFeedback = signal<Feedback[]>([]);
 
   feedbackView = computed(()=> {
+
     const raw = this.rawFeedback();
 
     return raw.map(item =>({
@@ -40,6 +41,7 @@ export class EmployeeFeedbackComponent implements OnInit {
   
 
   ngOnInit(): void { 
+    
     
     this.currentUser=this.empService.getCurrentUser();
     

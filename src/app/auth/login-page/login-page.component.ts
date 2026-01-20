@@ -17,6 +17,7 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [CommonModule, ReactiveFormsModule]
 })
 export class LoginPageComponent implements OnInit {
+
   role?: string;
   form: FormGroup;
   admin_logged = false;
@@ -26,8 +27,9 @@ export class LoginPageComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private route: ActivatedRoute,
-    private auth: AuthService, // ⬅️ added
+    private auth: AuthService,
   ) {
+
     // Initialize form
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -46,12 +48,11 @@ export class LoginPageComponent implements OnInit {
     return this.form.controls;
   }
 
-  onForgotPassword() {
-    alert('Forgot password clicked.');
-  }
+ 
 
   // Submit handler
   onLogin() {
+    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -65,7 +66,8 @@ export class LoginPageComponent implements OnInit {
 
     this.loginService.login(credentials).subscribe(user => {
       if (user) {
-        // ✅ Set auth state so guards allow access
+
+        //  Set auth state so guards allow access
         // Safe fallback: if ?role is missing, use user.role or default to 'employee'
         const r = (this.role ?? user.role ?? 'employee').toString().toLowerCase();
         const normalizedRole =
@@ -95,8 +97,7 @@ export class LoginPageComponent implements OnInit {
 
         this.router.navigate([target]);
 
-        // (Optional) If you still want to mark admin_logged or show a toast, you can do it here.
-        // this.admin_logged = normalizedRole === 'Admin';
+        
 
       } else {
         alert('Invalid credentials or role. Please try again.');
@@ -108,4 +109,8 @@ export class LoginPageComponent implements OnInit {
     // Navigate to the feature route
     this.router.navigate(['/auth/register-page']);
   }
+   onForgotPassword() {
+    alert('Forgot password clicked.');
+  }
+  
 }

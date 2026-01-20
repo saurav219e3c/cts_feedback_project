@@ -22,6 +22,7 @@ export class ReceivedRecognitionComponent implements OnInit {
 
   // 3. Computed View Signal (The efficient part)
   recognitionView = computed(() => {
+    
     const raw = this.rawRecognitions();
 
     return raw.map(item => ({

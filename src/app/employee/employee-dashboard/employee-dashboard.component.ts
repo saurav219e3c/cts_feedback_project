@@ -29,7 +29,7 @@ export class EmployeeDashboardComponent implements OnInit {
     { label: 'Recognition Points', value: 4, trend: 20, icon: 'bi-award', bgClass: 'bg-success-soft' },
     { label: 'Notifications', value: 3, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
   ];
-
+  //varibale
   name:string='Guest'; // Default name
 
   constructor(private authService :AuthService,
@@ -37,6 +37,7 @@ export class EmployeeDashboardComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
+    
     this.authService.user$.subscribe(user =>{
       if(user){
         this.name = user.name || 'Guest';

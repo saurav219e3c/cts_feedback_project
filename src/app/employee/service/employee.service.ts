@@ -1,361 +1,404 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { AuthService } from "../../core/services/auth.service";
 import { Observable, of } from "rxjs";
-import { DashboardStat } from "../employee-dashboard/employee-dashboard.component";
 
+// ==============================================================================
+// 1. INTERFACES
+// ==============================================================================
 
-//for the submit feedback 
 export interface Feedback {
   id?: number;
-  feedbackId?: string;        // Unique ID for this specific message
-  submittedByUserId: string;  // Who wrote this? (The logged-in user)
+  feedbackId?: string;
+  submittedByUserId: string;
   targetUserId: string;
   searchEmployee?: string;
-  // employeeId:string;
   category: string;
   comments: string;
   isAnonymous: boolean;
   submissionDate: string;
 }
 
-//for the send recognition 
 export interface Recognition {
-  id?: number;              // Database ID
-  recognitionId?: string;   // Unique ID (REC-xxx)
-  fromUserId: string;       // Sender
-  toUserId: string;         // Receiver
-  BadgeType: string;        // "Team Player", "Leader", etc.
+  id?: number;
+  recognitionId?: string;
+  fromUserId: string;
+  toUserId: string;
+  BadgeType: string;
   points: number;
   date: string;
-  comment?: string;         // Added so "Appreciation Note" is saved
+  comment?: string;
 }
 
-//inject di
+// Added this interface to fix your error
+export interface Employee {
+  id: string;
+  name: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
-
 export class EmployeeService {
 
+  private authService = inject(AuthService);
 
-  // local db
-  private storagekey = 'feedback_db';
-  private recognitionKey = 'recognition_db';
+  // Storage Keys
+  private readonly KEYS = {
+    FEEDBACK: 'feedback_db',
+    RECOGNITION: 'recognition_db',
+    USERS: 'feedback_project_users'
+  };
 
-  //constructur injection 
-  constructor(private authService: AuthService) { }
+  // State Variables (The Cache)
+  private feedbackList: Feedback[] = [];
+  private recognitionList: Recognition[] = [];
 
-  // Dummy Employees for your search bar
-  private employeeData = [
-    { name: 'John Doe ', id: 'EMP101' },
-    { name: 'Jane Smith', id: 'EMP102' },
-    { name: 'Mike Ross ', id: 'EMP103' },
-    { name: 'Rachel Zane', id: 'EMP104' }
-  ];
+  constructor() { 
+    this.loadData();
+  }
 
+  // --- 2. INTERNAL HELPERS ---
 
-  //dummy feedback for received fb
+  private loadData() {
+    // Load Feedback
+    const fbData = localStorage.getItem(this.KEYS.FEEDBACK);
+    this.feedbackList = fbData ? JSON.parse(fbData) : [];
 
-  private dummyFeedbacks: Feedback[] = [
-    {
-      id: 1,
-      submittedByUserId: "Sarah Jenkins",
-      targetUserId: 'EMP102',
-      category: "Leadership",
-      comments: "Great job leading the sprint planning yesterday. You kept everyone on track!",
-      submissionDate: "2023-10-15",
-      isAnonymous: false
-    },
-    {
-      id: 2,
-      submittedByUserId: "Michael Chen",
-      targetUserId: 'EMP102',
-      category: "Technical",
-      comments: "Your code review comments were incredibly helpful.",
-      submissionDate: "2023-10-12",
-      isAnonymous: false
-    },
-    {
-      id: 3,
-      submittedByUserId: "Emily Rodriguez",
-      targetUserId: 'EMP102',
-      category: "Teamwork",
-      comments: "Thanks for jumping in to help with the client presentation.",
-      submissionDate: "2023-10-10",
-      isAnonymous: false
-    },
-    {
-      id: 4,
-      submittedByUserId: "Unknown",
-      targetUserId: 'EMP102',
-      category: "Teamwork",
-      comments: "You really helped me out today. Thanks!",
-      submissionDate: "2023-10-10",
-      isAnonymous: true // Anonymous entry
-    }
-  ];
+    // Load Recognition
+    const recData = localStorage.getItem(this.KEYS.RECOGNITION);
+    this.recognitionList = recData ? JSON.parse(recData) : [];
+  }
 
-  //dummy recognition
-  private dummyRecognitions: Recognition[] = [
-    {
-      recognitionId: 'REC-001',
-      fromUserId: 'Admin',
-      toUserId: 'EMP102', // Jane Smith (Current User)
-      points: 9,
-      BadgeType: 'Innovator', // Note: Case sensitive match to your UI Logic
-      comment: 'The new API optimization is saving us 40% on server costs.',
-      date: 'Dec 29, 2025'
-    },
-    {
-      recognitionId: 'REC-002',
-      fromUserId: 'Rahul V.',
-      toUserId: 'EMP102',
-      points: 7,
-      BadgeType: 'Leader',
-      comment: 'Exceptional leadership during the Q4 release pressure.',
-      date: 'Dec 28, 2025'
-    },
-    {
-      recognitionId: 'REC-003',
-      fromUserId: 'Sarah C.',
-      toUserId: 'EMP102',
-      points: 5,
-      BadgeType: 'Team Player',
-      comment: 'Always goes out of the way to mentor junior developers.',
-      date: 'Dec 27, 2025'
-    }
-  ];
+  private saveToStorage() {
+    localStorage.setItem(this.KEYS.FEEDBACK, JSON.stringify(this.feedbackList));
+    localStorage.setItem(this.KEYS.RECOGNITION, JSON.stringify(this.recognitionList));
+  }
 
-
-
-  //get loggedin User
-  // Get current logged-in user ID
   getCurrentUserId(): string | null {
-    return this.authService.getCurrentUserId();
+    return this.authService.getCurrentUserId() ?? '';
   }
 
   getCurrentUser(): string {
     return this.getCurrentUserId() ?? 'unknown';
   }
 
-  //get employee name by id 
+  // --- 3. FEEDBACK LOGIC ---
 
-  getEmployeeName(submittedByUserId: string): string {
-    const allEmployees = this.getDummyEmployees();
-
-    const founduser = allEmployees.find(emp => emp.id === submittedByUserId);
-
-    return founduser ? founduser.name : submittedByUserId;
+  getAllFeedback() { 
+    return this.feedbackList; 
   }
 
+  getMyReceivedFeedback() {
+    const myId = this.getCurrentUserId();
+    return this.feedbackList.filter(f => f.targetUserId === myId);
+  }
 
+  getMySentFeedback() {
+    const myId = this.getCurrentUserId();
+    return this.feedbackList.filter(f => f.submittedByUserId === myId);
+  }
 
-
-
-  //save FB
   saveFeedback(data: Feedback) {
-    const currentData = this.getFeedbackHistory();
-
     data.feedbackId = 'FB-' + Date.now();
-
-    currentData.push(data);//local
-
-    localStorage.setItem(this.storagekey, JSON.stringify(currentData));
+    data.id = Date.now();
+    
+    this.feedbackList.push(data);
+    this.saveToStorage(); 
   }
 
+  // --- 4. RECOGNITION LOGIC ---
 
- // get all feedback 
-  getFeedbackHistory(): Feedback[] {
-
-    const data = localStorage.getItem(this.storagekey);
-
-    return data ? JSON.parse(data) : [];
+  getAllRecognitions() {
+    return this.recognitionList;
   }
 
-  //for receieved feedback according to logged in user
-  getMyReceivedFeedback(): Feedback[] {
-
-    //get real data from localstorage
-    const currentuserId = this.getCurrentUserId();
-    if (!currentuserId) {
-      return [];
-    }
-
-    const localData = localStorage.getItem(this.storagekey);
-
-    const realFeedbacks: Feedback[] = localData ? JSON.parse(localData) : [];
-
-    //combine
-
-    const combineList = [...this.dummyFeedbacks, ...realFeedbacks];
-
-    //filter
-    return combineList.filter(f => f.targetUserId === currentuserId);
-
+  getMyRecognitions() {
+    const myId = this.getCurrentUserId();
+    return this.recognitionList.filter(r => r.toUserId === myId);
   }
 
+  getMySentRecognition() {
+    const myId = this.getCurrentUserId();
+    return this.recognitionList.filter(r => r.fromUserId === myId);
+  }
 
-  // save Recogntion
-  saveRecognition(data: Recognition): void {
-    const list = this.getAllRecognitions();
-
+  saveRecognition(data: Recognition) {
     const newEntry = {
       ...data,
       id: Date.now(),
       recognitionId: 'REC-' + Date.now()
     };
 
-    list.push(newEntry);
-    localStorage.setItem(this.recognitionKey, JSON.stringify(list));
-  }
-   //get all recogntion
-  getAllRecognitions(): Recognition[] {
-    const data = localStorage.getItem(this.recognitionKey);
-    return data ? JSON.parse(data) : [];
+    this.recognitionList.push(newEntry);
+    this.saveToStorage();
   }
 
-  //get reconition by logged in user
+  // --- 5. DASHBOARD STATS ---
 
-  getMyRecognitions(): Recognition[] {
-    // Get Real Data from LocalStorage
-    const currentUserId = this.getCurrentUserId();
-    if (!currentUserId) {
-      return [];
-    }
-    const localData = localStorage.getItem(this.recognitionKey);
-    const realData: Recognition[] = localData ? JSON.parse(localData) : [];
-
-    // Merge Dummy + Real
-    const combined = [...this.dummyRecognitions, ...realData];
-
-    // Filter: Show only badges given TO the current user
-    return combined.filter(r => r.toUserId === currentUserId);
-  }
-
-  // get employee list Dummy + locaal storage
-  getDummyEmployees() {
-
-    //for usig local storage fetch employee data
-    const registeredUsers = this.getRegisteredEmployees();
-
-    //combine with dummy 
-    const combined = [...this.employeeData, ...registeredUsers];
-
-    //remove duplicates based on id
-    const uniqueMap = new Map();
-    combined.forEach(emp => {
-      if (!uniqueMap.has(emp.id)) {
-        uniqueMap.set(emp.id, emp);
-      }
-    });
-
-    return Array.from(uniqueMap.values());
-  }
-  // Add this new method to get registered employees from localStorage
-  private getRegisteredEmployees() {
-
-    const STORAGE_KEY = 'feedback_project_users';
-
-    const data = localStorage.getItem(STORAGE_KEY);
-
-    if (!data) return [];
-
-    try {
-      const users = JSON.parse(data);
-
-      // Filter for employee role (case-insensitive) and exclude the current user
-      const currentUserId = this.getCurrentUserId();
-
-      return users
-        .filter((u: any) => {
-          const isEmployee = u.role && (u.role.toLowerCase() === 'employee' || u.role.toLowerCase() === 'manager');
-          const notSelf = u.userId !== currentUserId; // Don't show self in the list
-          return isEmployee && notSelf;
-        })
-        .map((u: any) => ({
-          id: u.userId,
-          name: u.name || u.username || 'Unknown'
-        }))
-        .filter((emp: any) => emp.id && emp.name); // Remove invalid entries
-    } catch (error) {
-      console.error('Error parsing registered employees:', error);
-      return [];
-    }
-  }
-
-  // for dashboard 
-
-  private getAllFeedbackCombined(): Feedback[] {
-    const localData = localStorage.getItem(this.storagekey);
-    const realFeedbacks: Feedback[] = localData ? JSON.parse(localData) : [];
-    return [...this.dummyFeedbacks, ...realFeedbacks];
-  }
-  private getAllRecognitionCombined(): Recognition[] {
-    const localData = localStorage.getItem(this.recognitionKey);
-    const realData: Recognition[] = localData ? JSON.parse(localData) : [];
-    return [...this.dummyRecognitions, ...realData];
-  }
-  getMySentFeedback(): Feedback[] {
-    const currentId = this.getCurrentUserId();
-    if (!currentId) return [];
+  getDasboardStats(): Observable<any[]> {
+    const sentFb = this.getMySentFeedback().length;
+    const receivedFb = this.getMyReceivedFeedback().length;
+    const sentRec = this.getMySentRecognition().length;
     
-    // Filter logic: Check if 'submittedByUserId' is ME
-    return this.getAllFeedbackCombined().filter(f => f.submittedByUserId === currentId);
-  }
-  getMySentRecognition(): Recognition[] {
-    const currentId = this.getCurrentUserId();
-    if (!currentId) return [];
+    const totalPoints = this.getMyRecognitions().reduce((sum, item) => sum + (item.points || 0), 0);
 
-    // Filter logic: Check if 'fromUserId' is ME
-    return this.getAllRecognitionCombined().filter(r => r.fromUserId === currentId);
-  }
-
-  //dashboarad logic 
-  getDasboardStats(): Observable<DashboardStat[]> {
-    // Get the Real Counts using the methods above
-    const sentFbCount = this.getMySentFeedback().length;
-    const receivedFbCount = this.getMyReceivedFeedback().length;
-    
-    const sentRecCount = this.getMySentRecognition().length;
-    const receivedRecList = this.getMyRecognitions(); // Uses your existing method
-    
-    // Calculate total points received (optional, but looks good on dashboard)
-    const totalPointsReceived = receivedRecList.reduce((sum, item) => sum + (item.points || 0), 0);
-
-   // Return the array that matches your HTML structure exactly
     return of([
-      { 
-        label: 'Feedback Given', 
-        value: sentFbCount, 
-        trend: 12, 
-        icon: 'bi-pencil-square', 
-        bgClass: 'bg-primary-soft' 
-      },
-      { 
-        label: 'Feedback Received', 
-        value: receivedFbCount, 
-        trend: 5, 
-        icon: 'bi-chat-left-dots', 
-        bgClass: 'bg-warning-soft' 
-      },
-      { 
-        label: 'Recognition Given', 
-        value: sentRecCount, 
-        trend: 8, 
-        icon: 'bi-star', 
-        bgClass: 'bg-info-soft' 
-      },
-      { 
-        label: 'Points Earned', 
-        value: totalPointsReceived, 
-        trend: 20, 
-        icon: 'bi-award', 
-        bgClass: 'bg-success-soft' 
-      }
+      { label: 'Feedback Given', value: sentFb, trend: 12, icon: 'bi-pencil-square', bgClass: 'bg-primary-soft' },
+      { label: 'Feedback Received', value: receivedFb, trend: 5, icon: 'bi-chat-left-dots', bgClass: 'bg-warning-soft' },
+      { label: 'Recognition Given', value: sentRec, trend: 8, icon: 'bi-star', bgClass: 'bg-info-soft' },
+      { label: 'Points Earned', value: totalPoints, trend: 20, icon: 'bi-award', bgClass: 'bg-success-soft' }
     ]);
   }
 
+  // --- 6. EMPLOYEE LIST ---
 
+  // I added ': Employee[]' here so TypeScript knows what this returns
+  getAllEmployees(): Employee[] {
+    const data = localStorage.getItem(this.KEYS.USERS);
+    if (!data) return [];
+    
+    try {
+      const users = JSON.parse(data);
+      const myId = this.getCurrentUserId();
+      
+      return users
+        .filter((u: any) => u.userId !== myId && ['employee', 'manager'].includes(u.role?.toLowerCase()))
+        .map((u: any) => ({ id: u.userId, name: u.name || u.username }));
+    } catch { 
+      return []; 
+    }
+  }
 
+  getEmployeeName(id: string): string {
+    // Now TypeScript knows 'e' is an Employee, so 'e.id' is valid
+    const emp = this.getAllEmployees().find(e => e.id === id);
+    return emp ? emp.name : id;
+  }
 
 }
+
+//   //get employee name by id 
+
+//   getEmployeeName(submittedByUserId: string): string {
+//     const allEmployees = this.getDummyEmployees();
+
+//     const founduser = allEmployees.find(emp => emp.id === submittedByUserId);
+
+//     return founduser ? founduser.name : submittedByUserId;
+//   }
+
+
+
+
+
+//   //save FB
+//   saveFeedback(data: Feedback) {
+//     const currentData = this.getFeedbackHistory();
+
+//     data.feedbackId = 'FB-' + Date.now();
+
+//     currentData.push(data);//local
+
+//     localStorage.setItem(this.storagekey, JSON.stringify(currentData));
+//   }
+
+
+//  // get all feedback 
+//   getFeedbackHistory(): Feedback[] {
+
+//     const data = localStorage.getItem(this.storagekey);
+
+//     return data ? JSON.parse(data) : [];
+//   }
+
+//   //for receieved feedback according to logged in user
+//   getMyReceivedFeedback(): Feedback[] {
+
+//     //get real data from localstorage
+//     const currentuserId = this.getCurrentUserId();
+//     if (!currentuserId) {
+//       return [];
+//     }
+
+//     const localData = localStorage.getItem(this.storagekey);
+
+//     const realFeedbacks: Feedback[] = localData ? JSON.parse(localData) : [];
+
+//     //combine
+
+//     const combineList = [...this.dummyFeedbacks, ...realFeedbacks];
+
+//     //filter
+//     return combineList.filter(f => f.targetUserId === currentuserId);
+
+//   }
+
+
+//   // save Recogntion
+//   saveRecognition(data: Recognition): void {
+//     const list = this.getAllRecognitions();
+
+//     const newEntry = {
+//       ...data,
+//       id: Date.now(),
+//       recognitionId: 'REC-' + Date.now()
+//     };
+
+//     list.push(newEntry);
+//     localStorage.setItem(this.recognitionKey, JSON.stringify(list));
+//   }
+//    //get all recogntion
+//   getAllRecognitions(): Recognition[] {
+//     const data = localStorage.getItem(this.recognitionKey);
+//     return data ? JSON.parse(data) : [];
+//   }
+
+//   //get reconition by logged in user
+
+//   getMyRecognitions(): Recognition[] {
+//     // Get Real Data from LocalStorage
+//     const currentUserId = this.getCurrentUserId();
+//     if (!currentUserId) {
+//       return [];
+//     }
+//     const localData = localStorage.getItem(this.recognitionKey);
+//     const realData: Recognition[] = localData ? JSON.parse(localData) : [];
+
+//     // Merge Dummy + Real
+//     const combined = [...this.dummyRecognitions, ...realData];
+
+//     // Filter: Show only badges given TO the current user
+//     return combined.filter(r => r.toUserId === currentUserId);
+//   }
+
+//   // get employee list Dummy + locaal storage
+//   getDummyEmployees() {
+
+//     //for usig local storage fetch employee data
+//     const registeredUsers = this.getRegisteredEmployees();
+
+//     //combine with dummy 
+//     const combined = [...this.employeeData, ...registeredUsers];
+
+//     //remove duplicates based on id
+//     const uniqueMap = new Map();
+//     combined.forEach(emp => {
+//       if (!uniqueMap.has(emp.id)) {
+//         uniqueMap.set(emp.id, emp);
+//       }
+//     });
+
+//     return Array.from(uniqueMap.values());
+//   }
+//   // Add this new method to get registered employees from localStorage
+//   private getRegisteredEmployees() {
+
+//     const STORAGE_KEY = 'feedback_project_users';
+
+//     const data = localStorage.getItem(STORAGE_KEY);
+
+//     if (!data) return [];
+
+//     try {
+//       const users = JSON.parse(data);
+
+//       // Filter for employee role (case-insensitive) and exclude the current user
+//       const currentUserId = this.getCurrentUserId();
+
+//       return users
+//         .filter((u: any) => {
+//           const isEmployee = u.role && (u.role.toLowerCase() === 'employee' || u.role.toLowerCase() === 'manager');
+//           const notSelf = u.userId !== currentUserId; // Don't show self in the list
+//           return isEmployee && notSelf;
+//         })
+//         .map((u: any) => ({
+//           id: u.userId,
+//           name: u.name || u.username || 'Unknown'
+//         }))
+//         .filter((emp: any) => emp.id && emp.name); // Remove invalid entries
+//     } catch (error) {
+//       console.error('Error parsing registered employees:', error);
+//       return [];
+//     }
+//   }
+
+//   // for dashboard 
+
+//   private getAllFeedbackCombined(): Feedback[] {
+//     const localData = localStorage.getItem(this.storagekey);
+//     const realFeedbacks: Feedback[] = localData ? JSON.parse(localData) : [];
+//     return [...this.dummyFeedbacks, ...realFeedbacks];
+//   }
+//   private getAllRecognitionCombined(): Recognition[] {
+//     const localData = localStorage.getItem(this.recognitionKey);
+//     const realData: Recognition[] = localData ? JSON.parse(localData) : [];
+//     return [...this.dummyRecognitions, ...realData];
+//   }
+
+//   getMySentFeedback(): Feedback[] {
+
+//     const currentId = this.getCurrentUserId(); //lggedid 
+//     if (!currentId) return [];
+    
+//     // Filter logic: Check if 'submittedByUserId' is ME
+//     return this.getAllFeedbackCombined().filter(f => f.submittedByUserId === currentId);
+//   }
+//   getMySentRecognition(): Recognition[] {
+//     const currentId = this.getCurrentUserId();
+//     if (!currentId) return [];
+
+//     // Filter logic: Check if 'fromUserId' is ME
+//     return this.getAllRecognitionCombined().filter(r => r.fromUserId === currentId);
+//   }
+
+
+
+//   //dashboarad logic 
+//   getDasboardStats(): Observable<DashboardStat[]> {
+//     // Get the Real Counts using the methods above
+
+//     const sentFbCount = this.getMySentFeedback().length; // getmysend
+//     const receivedFbCount = this.getMyReceivedFeedback().length;
+    
+//     const sentRecCount = this.getMySentRecognition().length;
+//     const receivedRecList = this.getMyRecognitions(); // Uses your existing method
+    
+//     // Calculate total points received (optional, but looks good on dashboard)
+//     const totalPointsReceived = receivedRecList.reduce((sum, item) => sum + (item.points || 0), 0);
+
+//    // Return the array that matches your HTML structure exactly
+//     return of([
+//       { 
+//         label: 'Feedback Given', 
+//         value: sentFbCount, 
+//         trend: 12, 
+//         icon: 'bi-pencil-square', 
+//         bgClass: 'bg-primary-soft' 
+//       },
+//       { 
+//         label: 'Feedback Received', 
+//         value: receivedFbCount, 
+//         trend: 5, 
+//         icon: 'bi-chat-left-dots', 
+//         bgClass: 'bg-warning-soft' 
+//       },
+//       { 
+//         label: 'Recognition Given', 
+//         value: sentRecCount, 
+//         trend: 8, 
+//         icon: 'bi-star', 
+//         bgClass: 'bg-info-soft' 
+//       },
+//       { 
+//         label: 'Points Earned', 
+//         value: totalPointsReceived, 
+//         trend: 20, 
+//         icon: 'bi-award', 
+//         bgClass: 'bg-success-soft' 
+//       }
+//     ]);
+//   }
+
+
+
+

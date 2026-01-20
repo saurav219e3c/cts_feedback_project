@@ -22,18 +22,18 @@ export class AuthService {
   }
 
   //get current user value
-getCurrentUserId(): string | null {
-  return this._user$.getValue()?.id ?? null;
-}
+  getCurrentUserId(): string | null {
+    return this._user$.getValue()?.id ?? null;
+  }
   // For reactive components, expose as observable
-getCurrentUserId$(): Observable<string | null> {
-  return this.user$.pipe(map(u => u?.id ?? null));
-}
+  getCurrentUserId$(): Observable<string | null> {
+    return this.user$.pipe(map(u => u?.id ?? null));
+  }
 
-//get the username 
-getCurrentUserName$(): Observable<string | null> {
-  return this.user$.pipe(map(u => u?.name ?? null));
-}
+  //get the username 
+  getCurrentUserName$(): Observable<string | null> {
+    return this.user$.pipe(map(u => u?.name ?? null));
+  }
 
 
 
@@ -52,7 +52,7 @@ getCurrentUserName$(): Observable<string | null> {
     this.tokenSvc.clearToken();
     this._user$.next(null);
   }
-  
+
   hasRole$(role: Role): Observable<boolean> {
     return this.roles$.pipe(map(roles => roles.includes(role)));
   }
@@ -69,13 +69,13 @@ getCurrentUserName$(): Observable<string | null> {
     const payload = this.tokenSvc.decodePayload<any>(token);
     const user: User | null = payload
       ? {
-          id: payload.sub ?? payload.userId ?? 'unknown',
-          name: payload.name ?? '',
-          email: payload.email ?? '',
-          roles: (payload.roles ?? payload['role'] ?? [])
-            .map((r: string) => normalizeRole(r))
-            .filter(Boolean) as Role[],
-        }
+        id: payload.sub ?? payload.userId ?? 'unknown',
+        name: payload.name ?? '',
+        email: payload.email ?? '',
+        roles: (payload.roles ?? payload['role'] ?? [])
+          .map((r: string) => normalizeRole(r))
+          .filter(Boolean) as Role[],
+      }
       : null;
     this._user$.next(user);
   }
