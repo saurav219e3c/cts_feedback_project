@@ -14,21 +14,17 @@ import { EmployeeService, Feedback } from '../service/employee.service';
 
 export class EmployeeFeedbackComponent implements OnInit {
 
-  feedbackList: Feedback[]=[];
 
+  feedbackList: Feedback[]=[];
   currentUser: string ='';
  
 
-  constructor(private empService:EmployeeService
-    
-  ){}
+  constructor(private empService:EmployeeService){}
 
   rawFeedback = signal<Feedback[]>([]);
 
   feedbackView = computed(()=> {
-
     const raw = this.rawFeedback();
-
     return raw.map(item =>({
       ...item,//keeps orignal data
 
@@ -44,8 +40,6 @@ export class EmployeeFeedbackComponent implements OnInit {
     
     
     this.currentUser=this.empService.getCurrentUser();
-    
-
     this.feedbackList = this.empService.getMyReceivedFeedback();
 
     //load data into signal

@@ -13,16 +13,15 @@ import { EmployeeService, Recognition } from '../service/employee.service';
 })
 export class EmployeeRecognitionComponent implements OnInit {
   
-  // 1. Modern Injection (Cleaner than constructor)
-  private fb = inject(FormBuilder);
   
+  private fb = inject(FormBuilder);
   private empService = inject(EmployeeService);
 
   recognitionForm: FormGroup;
   employees: any[] = []; 
 
   // 2. SIGNALS for UI State (The Angular 19 Way)
-  // These replace the standard arrays for the UI logic
+  
   filteredEmployees = signal<any[]>([]); 
   selectedEmp = signal<any>(null);
 
