@@ -5,7 +5,7 @@ import { FormBuilder, Validators, FormGroup, ReactiveFormsModule, AbstractContro
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { RegisterService } from '../service/register.service';
 
-type Role = 'manager' | 'employee';
+type Role = 'manager' | 'employee'; // union
 
 @Component({
   selector: 'app-register-page',
@@ -26,9 +26,10 @@ export class RegisterPageComponent implements OnInit {
 
   // Patterns
   // 3 letters followed by 4 digits
-  userIdPattern = /^[A-Za-z]{3}[0-9]{4}$/; 
+  userIdPattern = /^[a-z]{3}[0-9]{4}$/; 
   // Min 6 chars, 1 Uppercase, 1 Digit, 1 Special Char
   passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
+
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +47,7 @@ export class RegisterPageComponent implements OnInit {
     this.form = this.fb.group(
       {
         userId: ['', [Validators.required, Validators.pattern(this.userIdPattern)]],
-        name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
+        name: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(80)]],
         role: [this.roleFromLogin ?? 'employee', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         department: ['', [Validators.required]],
