@@ -6,6 +6,7 @@ import { ManagerAnalyticsComponent } from "./manager-analytics/manager-analytics
 import { ManagerFeedbackComponent } from "./manager-feedback/manager-feedback.component";
 import { ManagerProfileComponent } from "./manager-profile/manager-profile.component";
 import { ManagerNotificationComponent } from "./manager-notification/manager-notification.component";
+import { ManagerRecognitionComponent } from "./manager-recognition/manager-recognition.component";
 
 export const managerRoutes :Routes = [{
   
@@ -34,6 +35,10 @@ export const managerRoutes :Routes = [{
         {
             path:'notifications',
             component:ManagerNotificationComponent
+        },
+        {
+            path:'recognitions',
+            component:ManagerRecognitionComponent
         }
     ]
 

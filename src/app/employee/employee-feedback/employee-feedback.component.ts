@@ -1,24 +1,8 @@
-import { CommonModule } from '@angular/common';
+  import { CommonModule } from '@angular/common';
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { EmployeeService, Feedback } from '../service/employee.service';
-import { AuthService } from '../../core/services/auth.service';
-// interface Feedback {
-//   id: string;
-//   employeeName: string;
-//   category: string;
-//   comment: string;
-//   date: string;
-//   isAnonymous: boolean;
-// }
 
-// interface Feedback {
-//   id: number;
-//   senderName: string;
-//   category: string;
-//   comments: string;
-//   date: string;
-//   isAnonymous: boolean;
-// }
+
 
 @Component({
   selector: 'app-employee-feedback',
@@ -30,28 +14,37 @@ import { AuthService } from '../../core/services/auth.service';
 
 export class EmployeeFeedbackComponent implements OnInit {
 
-  feedbackList: Feedback[]=[];
 
+  feedbackList: Feedback[]=[];
   currentUser: string ='';
  
 
-  constructor(private empService:EmployeeService
-    
-  ){}
+  constructor(private empService:EmployeeService){}
+
+  rawFeedback = signal<Feedback[]>([]);
+
+  feedbackView = computed(()=> {
+    const raw = this.rawFeedback();
+    return raw.map(item =>({
+      ...item,//keeps orignal data
+
+      senderName: item.isAnonymous ? 'Anonymous Colleage' : this.empService.getEmployeeName(item.submittedByUserId)
+    }));
+  });
 
 
 
   
 
   ngOnInit(): void { 
+    
+    
     this.currentUser=this.empService.getCurrentUser();
-    // this.authService.user$.subscribe(user =>{
-    //   if(user){
-    //     this.currentUserName = user.name;
-    //   }
-    // });
-
     this.feedbackList = this.empService.getMyReceivedFeedback();
+
+    //load data into signal
+    const data = this.empService.getMyReceivedFeedback();  //backend se data lana hai 
+    this.rawFeedback.set(data);
 
   }
 

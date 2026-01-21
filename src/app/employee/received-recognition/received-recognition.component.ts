@@ -1,45 +1,50 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EmployeeService, Recognition } from '../service/employee.service';
-
-// interface Recognition {
-//   to: string;
-//   from: string;
-//   points: number; 
-//   badge: 'Team Player' | 'Leader' | 'Problem Solver' | 'Innovator';
-//   message: string;
-//   date: string;
-// }
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-received-recognition',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [ CommonModule],
   templateUrl: './received-recognition.component.html',
   styleUrl: './received-recognition.component.css'
 })
 export class ReceivedRecognitionComponent implements OnInit {
-  
- // 2. Use Service Interface
-  recognitions: Recognition[] = []; 
-  currentUser: string = '';
 
+ 
+  // 1. Inject Service
   constructor(private empService: EmployeeService) {}
 
-  ngOnInit(): void {
-    this.currentUser = this.empService.getCurrentUser();
+  // 2. Raw Data Signal
+  rawRecognitions = signal<Recognition[]>([]);
 
-    // 3. Load Data from Service
-    this.recognitions = this.empService.getMyRecognitions();
+  // 3. Computed View Signal (The efficient part)
+  recognitionView = computed(() => {
     
-    // Sort so newest (top of list) appears first? Optional.
-    // this.recognitions.reverse(); 
+    const raw = this.rawRecognitions();
+
+    return raw.map(item => ({
+      ...item,
+      // Calculate Names ONCE here
+      senderName: this.empService.getEmployeeName(item.fromUserId),
+      receivedName: this.empService.getEmployeeName(item.toUserId)
+    }));
+  });
+
+  ngOnInit(): void {
+    
+    
+    // 4. Load Data DIRECTLY into the Signal
+    const data = this.empService.getMyRecognitions();
+    this.rawRecognitions.set(data);
   }
 
-  // 4. Update Helper for Badge Theme
-  // Note: Argument 'badge' type changed to string to match interface
- getBadgeTheme(badge: string, points: number) {
+  
+
+  // 5. Helper for Badge Theme (Keep this, it's purely visual logic)
+  getBadgeTheme(badge: string, points: number) {
     const icons: Record<string, string> = {
       'Leader': 'bi-rocket-takeoff-fill',
       'Team Player': 'bi-people-fill',
@@ -51,11 +56,6 @@ export class ReceivedRecognitionComponent implements OnInit {
 
     let themeColor: string;
 
-    // YOUR LOGIC:
-    // 8 to 10 -> Green
-    // 6 to 7  -> Yellow
-    // 1 to 5  -> Red
-    
     if (points >= 8) {
       themeColor = '#2ed573'; // Green
     } else if (points >= 6) {

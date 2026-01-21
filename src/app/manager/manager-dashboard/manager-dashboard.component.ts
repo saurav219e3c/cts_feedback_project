@@ -2,25 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ManagerService } from '../service/manager_service';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-manager-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './manager-dashboard.component.html'
 })
 export class ManagerDashboardComponent implements OnInit, OnDestroy {
-  // Target Data
   data = {
-    totalFeedback: 1284,
-    pendingReviews: 42,
-    engagementScore: 88,
-    acknowledged: 912,
+    totalFeedback: 0,
+    pendingReviews: 0,
+    engagementScore: 0,
+    acknowledged: 0,
     growthPercent: 2.4
   };
 
-  // Animation values
   display = {
     totalFeedback: 0,
     pendingReviews: 0,
@@ -29,21 +29,99 @@ export class ManagerDashboardComponent implements OnInit, OnDestroy {
   };
 
   searchQuery: string = '';
+  statusFilter: string = 'All'; // New filter state
   private timer: any;
+  private timeUpdateTimer: any; // Timer for dynamic time updates
+  activities: any[] = [];
+  categoryData: { name: string, count: number, percent: number, colorClass: string }[] = [];
 
-  // Detailed activities
-  activities = [
-    { title: 'New Feedback', user: 'Amit', detail: 'Team Work', time: '2m ago', colorClass: 'blue' },
-    { title: 'Review Completed', user: 'Sneha', detail: 'Communication', time: '1h ago', colorClass: 'emerald' },
-    { title: 'Pending', user: 'Rahul', detail: 'Work Quality', time: '', colorClass: 'amber' }
-  ];
+  constructor(private managerService: ManagerService) {}
 
   ngOnInit() {
+    this.loadRealData();
+    this.loadCategoryDistribution();
     this.animate();
+
+    // Update activity times every 60 seconds
+    this.timeUpdateTimer = setInterval(() => {
+      this.refreshActivityTimes();
+    }, 60000);
+  }
+
+  loadRealData() {
+    const allFeedback = this.managerService.getAllFeedback();
+
+    this.data.totalFeedback = allFeedback.length;
+    this.data.pendingReviews = allFeedback.filter(f => !f.status || f.status === 'Pending').length;
+    this.data.acknowledged = allFeedback.filter(f => f.status === 'Acknowledged' || f.status === 'Resolved').length;
+
+    if (this.data.totalFeedback > 0) {
+      this.data.engagementScore = Math.round((this.data.acknowledged / this.data.totalFeedback) * 100);
+    }
+
+    this.activities = allFeedback.slice(-5).reverse().map(f => ({
+      ...f,
+      title: f.status === 'Resolved' ? 'Review Completed' : 'New Feedback',
+      user: f.isAnonymous ? 'Anonymous' : (f.searchEmployee || 'Unknown'),
+      detail: f.category,
+      time: this.calculateTimeAgo(f.date), // Dynamic Time
+      colorClass: f.status === 'Resolved' ? 'emerald' : (f.status === 'Acknowledged' ? 'blue' : 'amber')
+    }));
+  }
+
+  refreshActivityTimes() {
+    this.activities.forEach(a => {
+      a.time = this.calculateTimeAgo(a.date);
+    });
+  }
+
+  calculateTimeAgo(dateString: string): string {
+    if (!dateString) return '1 min ago';
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInMs = now.getTime() - past.getTime();
+    const diffInMins = Math.floor(diffInMs / (1000 * 60));
+
+    if (diffInMins <= 1) return '1 min ago';
+    if (diffInMins < 60) return `${diffInMins} min ago`;
+    const diffInHours = Math.floor(diffInMins / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    return past.toLocaleDateString();
+  }
+
+  loadCategoryDistribution() {
+    let allFeedback = this.managerService.getAllFeedback();
+    
+    // Filter by status if not 'All'
+    if (this.statusFilter !== 'All') {
+      allFeedback = allFeedback.filter(f => f.status === this.statusFilter);
+    }
+
+    const categories: { [key: string]: number } = {};
+    allFeedback.forEach(f => {
+      const cat = f.category || 'Other';
+      categories[cat] = (categories[cat] || 0) + 1;
+    });
+
+    const total = allFeedback.length || 1;
+    const colors = ['bg-indigo-500', 'bg-purple-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500'];
+
+    this.categoryData = Object.keys(categories).map((name, index) => ({
+      name: name,
+      count: categories[name],
+      percent: Math.round((categories[name] / total) * 100),
+      colorClass: colors[index % colors.length]
+    })).sort((a, b) => b.count - a.count);
+  }
+
+  onFilterChange(status: string) {
+    this.statusFilter = status;
+    this.loadCategoryDistribution();
   }
 
   ngOnDestroy() {
     if (this.timer) clearInterval(this.timer);
+    if (this.timeUpdateTimer) clearInterval(this.timeUpdateTimer);
   }
 
   get filteredActivities() {
@@ -55,7 +133,7 @@ export class ManagerDashboardComponent implements OnInit, OnDestroy {
 
   animate() {
     const steps = 60;
-    const interval = 1500 / steps;
+    const interval = 1000 / steps;
     let i = 0;
 
     this.timer = setInterval(() => {
@@ -72,12 +150,52 @@ export class ManagerDashboardComponent implements OnInit, OnDestroy {
 
   downloadReport() {
     const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text('Performance Dashboard Report', 10, 20);
-    doc.setFontSize(12);
-    doc.text(`Total Feedback: ${this.data.totalFeedback}`, 10, 40);
-    doc.text(`Pending Reviews: ${this.data.pendingReviews}`, 10, 50);
-    doc.text(`Engagement Score: ${this.data.engagementScore}%`, 10, 60);
-    doc.save('dashboard-report.pdf');
+    const timestamp = new Date().toLocaleString();
+
+    doc.setFillColor(79, 70, 229);
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Performance Dashboard Report', 14, 22);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated on: ${timestamp}`, 14, 32);
+
+    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(14);
+    doc.text('Executive Summary', 14, 55);
+
+    autoTable(doc, {
+      startY: 60,
+      head: [['Metric', 'Value']],
+      body: [
+        ['Total Feedback Received', this.data.totalFeedback.toString()],
+        ['Pending Action Items', this.data.pendingReviews.toString()],
+        ['Acknowledged/Resolved', this.data.acknowledged.toString()],
+        ['Engagement Score', `${this.data.engagementScore}%`]
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [79, 70, 229], textColor: 255 },
+      styles: { fontSize: 11, cellPadding: 5 }
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY + 15;
+    doc.text('Category Distribution', 14, finalY);
+
+    autoTable(doc, {
+      startY: finalY + 5,
+      head: [['Category', 'Count', 'Percentage']],
+      body: this.categoryData.map(c => [c.name, c.count.toString(), `${c.percent}%`]),
+      theme: 'grid',
+      headStyles: { fillColor: [79, 70, 229] }
+    });
+
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text('This is an automated system report for management review.', 14, pageHeight - 10);
+
+    doc.save(`Performance_Report_${Date.now()}.pdf`);
   }
 }

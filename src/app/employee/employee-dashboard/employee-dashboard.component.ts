@@ -1,35 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { EmployeeService } from '../service/employee.service';
+export interface DashboardStat {
+  label: string;
+  value: number;
+  trend: number;
+  icon: string;
+  bgClass: string;
+}
 
 @Component({
   selector: 'app-employee-dashboard',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css'
 })
 export class EmployeeDashboardComponent implements OnInit {
- today = new Date();
-  
-  // Data for the summary cards
-  stats = [
-    { label: 'Feedback Given', value: 9, trend: 8, icon: 'bi-pencil-square', bgClass: 'bg-primary-soft' },
-    { label: 'Feedback Received', value: 7, trend: 12, icon: 'bi-chat-left-dots', bgClass: 'bg-warning-soft' },
-    { label: 'Recognition Points', value: 4, trend: 20, icon: 'bi-award', bgClass: 'bg-success-soft' },
-    { label: 'Notifications', value: 3, trend: 0, icon: 'bi-bell', bgClass: 'bg-danger-soft' }
-  ];
 
-  name:string='Guest';
+  //inject service 
 
-  constructor(private authService :AuthService){}
+  private employeeService = inject(EmployeeService);
+  private authService = inject(AuthService);
+
+ 
+
+  stats: any[] = [];
+
+   today = new Date();
+
+
+  //varibale for dynamic name display
+  name: string = 'Guest'; 
+
+  constructor() { }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user =>{
-      if(user){
+
+    this.authService.user$.subscribe(user => {
+      if (user) {
         this.name = user.name || 'Guest';
       }
     });
-}
+
+    //for the load dashboards stats 
+
+    this.employeeService.getDasboardStats().subscribe(data => {
+      this.stats = data;
+    });
+
+  }
 }

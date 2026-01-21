@@ -14,7 +14,7 @@ export const EMPLOYEE_ROUTES: Routes = [
     component: EmployeeLayoutComponent,
     canActivate:[authGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 
       { path: 'dashboard', component: EmployeeDashboardComponent },
       { path: 'feedback', component: SubmitFeedbackComponent},
       { path: 'notification', component: EmployeeNotificationComponent },
