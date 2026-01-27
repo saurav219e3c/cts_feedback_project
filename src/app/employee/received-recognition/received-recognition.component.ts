@@ -18,7 +18,7 @@ export class ReceivedRecognitionComponent implements OnInit {
   //Signal
   rawRecognitions = signal<Recognition[]>([]);
 
-  // 3. Computed View Signal 
+  
   recognitionView = computed(() => {
 
     const raw = this.rawRecognitions();

@@ -53,9 +53,9 @@ export class LoginPageComponent implements OnInit {
 
   // Submit handler
   onLogin() {
-    
-    if (this.form.invalid) {
+    if (this.form.invalid) { //true
       this.form.markAllAsTouched();
+
       return;
     }
 
@@ -83,12 +83,6 @@ export class LoginPageComponent implements OnInit {
           roles: [normalizedRole]
         });
 
-        // ✅ Respect redirect param if guard sent us here
-        const redirect = this.route.snapshot.queryParamMap.get('redirect');
-        if (redirect) {
-          this.router.navigateByUrl(redirect);
-          return;
-        }
 
         // ✅ Otherwise navigate based on role
         const target =
@@ -105,7 +99,12 @@ export class LoginPageComponent implements OnInit {
       }
     });
   }
+ havingthis(){
+  
+      console.log(this.f['username']?.value);
+      
 
+ }
   goToRegister() {
     // Navigate 
     this.router.navigate(['/auth/register-page']);
@@ -113,5 +112,5 @@ export class LoginPageComponent implements OnInit {
    onForgotPassword() {
     alert('Forgot password clicked.');
   }
-  
+
 }
