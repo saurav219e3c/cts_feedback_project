@@ -54,6 +54,7 @@ export class LoginPageComponent implements OnInit {
   onLogin() {
     if (this.form.invalid) { //true
       this.form.markAllAsTouched();
+
       return;
     }
 
@@ -97,7 +98,12 @@ export class LoginPageComponent implements OnInit {
       }
     });
   }
+ havingthis(){
+  
+      console.log(this.f['username']?.value);
+      
 
+ }
   goToRegister() {
     // Navigate to the feature route
     this.router.navigate(['/auth/register-page']);
@@ -105,5 +111,5 @@ export class LoginPageComponent implements OnInit {
    onForgotPassword() {
     alert('Forgot password clicked.');
   }
-  
+
 }
