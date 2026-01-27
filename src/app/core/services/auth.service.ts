@@ -6,6 +6,7 @@ import { Role } from '../models/role.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  
   private _user$ = new BehaviorSubject<User | null>(null);
   
   // NEW: Key for saving user to Local Storage
