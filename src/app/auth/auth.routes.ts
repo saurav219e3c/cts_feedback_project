@@ -9,7 +9,7 @@ export const AUTH_ROUTES: Routes = [
   // /auth -> redirect to /auth/home-page
   { path: '', pathMatch: 'full', redirectTo: 'home-page' },
 
-  // /auth/home-page
+  
   { path: 'home-page',canMatch: [loginGuard], component: HomePageComponent },
 
   // /auth/login-page?role=admin|manager|employee
