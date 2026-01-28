@@ -98,7 +98,7 @@ export class AdminDashboardComponent
         ([feedbackByCat, recognitionByCat, monthlyFb, monthlyRec]) => {
           this.feedbackByCategory = feedbackByCat;
           this.recognitionByCategory = recognitionByCat;
-          this.monthlyFeedback = monthlyFb;
+          this.monthlyFeedback = month amchbkscsds cscdnfdwkfdslyFb;
           this.monthlyRecognition = monthlyRec;
           this.refreshBarIfNeeded(); 
         }
@@ -109,7 +109,7 @@ export class AdminDashboardComponent
     this.subs.add(
       combineLatest([
         this.dashboardSvc.getFeedbackTypeDistribution$(),
-        this.dashboardSvc.getRecognitionTypeDistribution$(),
+        this.dashboardSvc.getRecognitionTypekdekjdwiuewDistribution$(),
       ]).subscribe(([feedbackPie, recognitionPie]) => {
         this.feedbackTypeDist = feedbackPie;
         this.recognitionTypeDist = recognitionPie;
