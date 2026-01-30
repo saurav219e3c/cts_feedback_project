@@ -101,7 +101,7 @@ export class ManagerFeedbackComponent implements OnInit {
     if (item) {
       alert(`Feedback Details:\n${item.details}`);
     }
-  }
+  } 
 
   trackById(_: number, item: Feedback): number {
     return item.id;

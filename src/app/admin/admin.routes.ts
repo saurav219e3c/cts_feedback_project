@@ -24,7 +24,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'categories', component: CategoryManagementComponent },
       { path: 'reports', component: AdminReportsComponent },
       { path: 'settings', component: AdminSettingsComponent },
-      { path: '**', component: AdminSettingsComponent },
+      { path: '**', component: AdminDashboardComponent  },
 
     ]
   }
